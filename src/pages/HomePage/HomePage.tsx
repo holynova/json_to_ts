@@ -34,107 +34,14 @@ const styles: { [key: string]: CSS.Properties } = {
 };
 interface Props {}
 
-const sampleData = {
-  "example prop": null,
-  nancy_mccarty: {
-    A1: {
-      userID: "nancy_mccarty",
-      userName: "Nancy's McCarty",
-      id: "A1",
-      score: "0.75",
-      date_created: 151208443563,
-      date_signed: 151208448055,
-      date_approved: 151208471190,
-      answers: [
-        {
-          Q1: true,
-          Q2: false,
-        },
-        {
-          Q34: "This is an answer",
-          Q35: false,
-        },
-      ],
-    },
-    A2: {
-      userID: "nancy_mccarty",
-      userName: "Nancy McCarty",
-      id: "A2",
-      score: 0.9,
-      date_created: 151208450090,
-      date_signed: false,
-      date_approved: false,
-      answers: ["No", "No", "No", "Yes", "Yes"],
-    },
-  },
-  george_richardson: {
-    A2: {
-      userID: "george_richardson",
-      userName: "George Richardson",
-      id: "A2",
-      score: 0.35,
-      date_created: 1512076585058,
-      date_signed: false,
-      date_approved: false,
-      answers: ["No", "Yes", "Yes", "Yes", "Yes"],
-    },
-  },
-  tom_hughe: {
-    A4: {
-      userID: "tom_hughe",
-      userName: "Tom Hughe",
-      id: "A4",
-      score: 0.75,
-      date_created: 1512076575026,
-      date_signed: 1512076609894,
-      date_approved: false,
-      answers: ["Yes", "No", "No", "Yes", "No"],
-    },
-    M1: {
-      userID: "tom_hughe",
-      userName: "Tom Hughe",
-      id: "M1",
-      score: false,
-      date_created: 1512076587361,
-      date_signed: false,
-      date_approved: false,
-      answers: [false, false, false, false, false],
-    },
-  },
-  heidy_white: {
-    L2: {
-      userID: "heidy_white",
-      userName: "Heidy White",
-      id: "L2",
-      score: false,
-      date_created: 15120765766312,
-      date_signed: false,
-      date_approved: false,
-      answers: [0, 1, 2, 3, 4],
-    },
-  },
-};
-const sampleData2 = {
-  myNumber: 1,
-  yourName: {
-    name: "str",
-  },
-  myData: [
-    1,
-    2,
-    3,
-    "str",
-    {
-      name: "12",
-      age: 123,
-    },
-  ],
-};
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { sampleData2 } from "./utils";
 
 const HomePage: React.FC<Props> = (props) => {
   const [input, setInput] = useState<object | any[]>(sampleData2);
   const [output, setOutput] = useState("");
-  const [showLineNumber, setShowLineNumber] = useState(true);
+  const [showLineNumber, setShowLineNumber] = useState(false);
 
   useEffect(() => {
     if (!input) {
@@ -163,7 +70,8 @@ const HomePage: React.FC<Props> = (props) => {
         <CopyToClipboard
           text={JSON.stringify(JSON.stringify(input || "", null, 2))}
           onCopy={() => {
-            console.log("复制成功", input);
+            toast.success("复制JSON 成功");
+            console.log("复制JSON成功", input);
           }}
         >
           <div className="btn">复制JSON</div>
@@ -181,7 +89,10 @@ const HomePage: React.FC<Props> = (props) => {
           },
         }}
         placeholder={input || {}} // data to display
-        onChange={(d: any) => setInput(d?.jsObject || {})}
+        onChange={(d: any) => {
+          console.log("onChange", d);
+          setInput(d?.jsObject || {});
+        }}
         theme="dark"
         locale={locale}
         colors={{
@@ -197,7 +108,10 @@ const HomePage: React.FC<Props> = (props) => {
       <h3>输出</h3>
       <CopyToClipboard
         text={output}
-        onCopy={() => console.log("复制成功", output)}
+        onCopy={() => {
+          toast.success("复制TS 成功");
+          console.log("复制TS 成功", output);
+        }}
       >
         <div className="btn">复制TS</div>
       </CopyToClipboard>
@@ -226,6 +140,11 @@ const HomePage: React.FC<Props> = (props) => {
         {inputPart}
         {outputPart}
       </div>
+      <ToastContainer
+        autoClose={2000}
+        transition={Slide}
+        position={toast.POSITION.TOP_CENTER}
+      ></ToastContainer>
     </div>
   );
 };
