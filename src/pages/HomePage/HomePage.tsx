@@ -38,22 +38,42 @@ import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sampleData2 } from "./utils";
 
+interface InputData {
+  plainText?: string;
+  markupText?: string;
+  json?: string;
+  jsObject: object | any[];
+  lines?: number;
+  error?: boolean | object;
+}
+
+const blank: InputData = {
+  plainText: "",
+  markupText: "",
+  json: "",
+  jsObject: {},
+  lines: 0,
+  error: false,
+};
+
 const HomePage: React.FC<Props> = (props) => {
-  const [input, setInput] = useState<object | any[]>(sampleData2);
+  const [inputData, setInputData] = useState<InputData>(blank);
+  // const [input, setInput] = useState<object | any[]>(sampleData2);
   const [output, setOutput] = useState("");
-  const [showLineNumber, setShowLineNumber] = useState(false);
+  const [showLineNumber, setShowLineNumber] = useState(true);
 
   useEffect(() => {
-    if (!input) {
-      setOutput("error");
+    if (inputData.error) {
+      setOutput("输入有错误, 请修改");
       return;
     }
-    console.time("convert");
-    let res = convert(input).join("\n\n");
-    // .map((x) => JSON.stringify(x, null, 2))
-    setOutput(res);
-    console.timeEnd("convert");
-  }, [input]);
+    if (inputData?.jsObject) {
+      console.time("convert");
+      let res = convert(inputData?.jsObject).join("\n\n");
+      setOutput(res);
+      console.timeEnd("convert");
+    }
+  }, [inputData]);
 
   const inputPart = (
     <div className="input">
@@ -62,16 +82,19 @@ const HomePage: React.FC<Props> = (props) => {
         <div
           className="btn"
           onClick={() => {
-            setInput({});
+            setInputData(blank);
+            // setInput({});
           }}
         >
           清空
         </div>
         <CopyToClipboard
-          text={JSON.stringify(JSON.stringify(input || "", null, 2))}
+          text={JSON.stringify(
+            JSON.stringify(inputData?.jsObject || "", null, 2),
+          )}
           onCopy={() => {
             toast.success("复制JSON 成功");
-            console.log("复制JSON成功", input);
+            console.log("复制JSON成功", inputData?.jsObject);
           }}
         >
           <div className="btn">复制JSON</div>
@@ -79,6 +102,8 @@ const HomePage: React.FC<Props> = (props) => {
       </div>
 
       <JSONInput
+        //@ts-ignore
+        error={inputData?.error}
         style={{
           labelColumn: {
             display: showLineNumber ? "auto" : "none",
@@ -88,10 +113,11 @@ const HomePage: React.FC<Props> = (props) => {
             fontSize: "14px",
           },
         }}
-        placeholder={input || {}} // data to display
-        onChange={(d: any) => {
+        // placeholder={inputData?.jsObject || {}} // data to display
+        onChange={(d: InputData) => {
+          setInputData(d);
           console.log("onChange", d);
-          setInput(d?.jsObject || {});
+          // setInput(d?.jsObject || {});
         }}
         theme="dark"
         locale={locale}
