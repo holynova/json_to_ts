@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "publish": "bash publish.bash"
   },
   "dependencies": {
     "json-to-ts": "^1.7.0",
