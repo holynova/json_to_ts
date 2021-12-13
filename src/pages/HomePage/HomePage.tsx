@@ -18,6 +18,8 @@ import convert from "json-to-ts";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import JSONInput from "react-json-editor-ajrm";
+
+//@ts-ignore
 import locale from "react-json-editor-ajrm/locale/zh-cn";
 
 const styles: { [key: string]: CSS.Properties } = {
@@ -159,7 +161,7 @@ const HomePage: React.FC<Props> = (props) => {
           清空
         </div>
         <CopyToClipboard
-          text={JSON.stringify(JSON.stringify(input?.jsObject || "", null, 2))}
+          text={JSON.stringify(JSON.stringify(input || "", null, 2))}
           onCopy={() => {
             console.log("复制成功", input);
           }}
@@ -179,7 +181,7 @@ const HomePage: React.FC<Props> = (props) => {
           },
         }}
         placeholder={input || {}} // data to display
-        onChange={(d) => setInput(d?.jsObject || {})}
+        onChange={(d: any) => setInput(d?.jsObject || {})}
         theme="dark"
         locale={locale}
         colors={{
