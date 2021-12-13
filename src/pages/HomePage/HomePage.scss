@@ -1,0 +1,30 @@
+.HomePage {
+  .title{
+    margin: 0 auto;
+    width: 80%;
+    font-size: 22px;
+    color:#fff;
+  }
+  .wrapper {
+    display: flex;
+    // justify-content: space-between;
+    margin: 0 auto;
+    width: 80%;
+    h3{
+      color: #fff;
+    }
+    .input{
+      margin-right: 8px;
+    }
+    .output{
+      margin-left: 8px;
+      
+    }
+  }
+  .btn{
+    display: inline;
+    color:#fff;
+    padding:8px;
+  }
+
+}
