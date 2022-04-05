@@ -1,17 +1,10 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
+import React from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 // import {} from "antd";
 import "./CodeBox.scss";
 import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-import CopyToClipboard from "react-copy-to-clipboard";
-import show from "../../../utils/show";
+import CopyBox from "../../../common/components/CopyBox";
 
 // import  {log} from ''
 interface Props {
@@ -30,14 +23,9 @@ const CodeBox: React.FC<Props> = (props: Props) => {
   return (
     <div className="CodeBox">
       <div className="button-part">
-        <CopyToClipboard
-          text={output}
-          onCopy={() => {
-            show.success("复制成功");
-          }}
-        >
+        <CopyBox text={output}>
           <div className="btn">复制</div>
-        </CopyToClipboard>
+        </CopyBox>
       </div>
       <div className="code-wrapper">
         {props?.language ? (

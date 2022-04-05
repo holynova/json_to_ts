@@ -29,6 +29,7 @@ import { sampleData } from "./sampleData";
 import MockDataBox from "./components/MockDataBox";
 import show from "../../utils/show";
 import CodeBox from "./components/CodeBox";
+import CopyBox from "../../common/components/CopyBox";
 
 interface InputData {
   plainText?: string;
@@ -54,7 +55,7 @@ function genInitInput(sample: object) {
   return clone;
 }
 
-const HomePage: React.FC<Props> = (props) => {
+const HomePage: React.FC<Props> = (props: Props) => {
   const [inputData, setInputData] = useState<InputData>(blank);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -90,16 +91,14 @@ const HomePage: React.FC<Props> = (props) => {
         >
           清空
         </div>
-        <CopyToClipboard
+
+        <CopyBox
           text={JSON.stringify(
             JSON.stringify(inputData?.jsObject || "", null, 2),
           )}
-          onCopy={() => {
-            show.success("复制JSON 成功");
-          }}
         >
           <div className="btn">复制JSON</div>
-        </CopyToClipboard>
+        </CopyBox>
       </div>
 
       <JSONInput
