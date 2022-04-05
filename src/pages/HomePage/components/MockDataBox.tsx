@@ -38,7 +38,11 @@ const MockDataBox: React.FC<Props> = (props: Props) => {
         </div>
       </div>
 
-      <CodeBox data={props.error || output} language="typescript"></CodeBox>
+      <CodeBox
+        data={props.error || output}
+        language="typescript"
+        downloadFileName="mockData.json"
+      ></CodeBox>
     </div>
   );
 };

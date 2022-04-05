@@ -51,10 +51,11 @@ const blank: InputData = {
   error: false,
 };
 
-function genInitInput(sample: object) {
-  let clone = { ...blank };
-  clone.jsObject = sample;
-  return clone;
+function addExportPrefix(str: string) {
+  if (typeof str === "string") {
+    return str.replaceAll(/interface/g, "export interface");
+  }
+  return "";
 }
 
 const HomePage: React.FC<Props> = (props: Props) => {
@@ -62,19 +63,19 @@ const HomePage: React.FC<Props> = (props: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   // const [input, setInput] = useState<object | any[]>(sampleData2);
-  const [output, setOutput] = useState("");
+  const [outputStr, setOutputStr] = useState("");
   const [showLineNumber, setShowLineNumber] = useState(true);
   const [initialInput, setInitialInput] = useState<object | any[]>(sampleData);
 
   useEffect(() => {
     if (inputData.error) {
-      setOutput("输入有错误, 请修改");
+      setOutputStr("输入有错误, 请修改");
       return;
     }
     if (inputData?.jsObject) {
       console.time("convert");
       let res = convertJsonToTypeScript(inputData?.jsObject).join("\n\n");
-      setOutput(res);
+      setOutputStr(res);
       console.timeEnd("convert");
     }
   }, [inputData]);
@@ -138,7 +139,11 @@ const HomePage: React.FC<Props> = (props: Props) => {
   const outputPart = (
     <div className="output">
       <h3>TypeScript</h3>
-      <CodeBox data={output} language="typescript"></CodeBox>
+      <CodeBox
+        data={addExportPrefix(outputStr)}
+        language="typescript"
+        downloadFileName="index.d.ts"
+      ></CodeBox>
     </div>
   );
 

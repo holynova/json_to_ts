@@ -5,12 +5,14 @@ import "./CodeBox.scss";
 import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import CopyBox from "../../../common/components/CopyBox";
+import CodeDownloader from "../../../common/components/CodeDownloader";
 
 // import  {log} from ''
 interface Props {
   data: any;
   language?: string;
   showLineNumber?: boolean;
+  downloadFileName?: string;
 }
 
 const CodeBox: React.FC<Props> = (props: Props) => {
@@ -26,6 +28,10 @@ const CodeBox: React.FC<Props> = (props: Props) => {
         <CopyBox text={output}>
           <div className="btn">复制</div>
         </CopyBox>
+        <CodeDownloader
+          data={output}
+          fileName={props?.downloadFileName || "download.txt"}
+        ></CodeDownloader>
       </div>
       <div className="code-wrapper">
         {props?.language ? (

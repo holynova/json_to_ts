@@ -22,7 +22,8 @@ const CodeDownloader: React.FC<Props> = (props: Props) => {
         ? props?.data
         : JSON.stringify(props.data, null, 2);
     download(data, props?.fileName || `file${Date.now()}.txt`);
-  }, []);
+  }, [props]);
+
   return (
     <div className="CodeDownloader">
       {/* <h3>CodeDownloader</h3> */}
