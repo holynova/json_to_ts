@@ -59,6 +59,7 @@ export class Converter {
       name: mock.cname.bind(mock),
       title: mock.ctitle.bind(mock),
     };
+
     const allowedKeys = [
       "date",
       "time",
@@ -196,7 +197,7 @@ export class Converter {
     return loop(this.input);
   }
 
-  getMockString() {}
+  getMockConfig() {}
 
   getMockFactoryFunction() {}
 

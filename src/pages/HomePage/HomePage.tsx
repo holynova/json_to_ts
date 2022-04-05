@@ -36,8 +36,10 @@ interface Props {}
 
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { sampleData2, sampleData3 } from "./utils";
+import { sampleData, sampleData2, sampleData3 } from "./sampleData";
 import MockDataBox from "./components/MockDataBox";
+import show from "../../utils/show";
+import CodeBox from "./components/CodeBox";
 
 interface InputData {
   plainText?: string;
@@ -68,7 +70,7 @@ const HomePage: React.FC<Props> = (props) => {
   // const [input, setInput] = useState<object | any[]>(sampleData2);
   const [output, setOutput] = useState("");
   const [showLineNumber, setShowLineNumber] = useState(true);
-  const [initialInput, setInitialInput] = useState<object | any[]>(sampleData3);
+  const [initialInput, setInitialInput] = useState<object | any[]>(sampleData);
   useEffect(() => {
     if (inputData.error) {
       setOutput("输入有错误, 请修改");
@@ -101,8 +103,7 @@ const HomePage: React.FC<Props> = (props) => {
             JSON.stringify(inputData?.jsObject || "", null, 2),
           )}
           onCopy={() => {
-            toast.success("复制JSON 成功");
-            console.log("复制JSON成功", inputData?.jsObject);
+            show.success("复制JSON 成功");
           }}
         >
           <div className="btn">复制JSON</div>
@@ -140,39 +141,10 @@ const HomePage: React.FC<Props> = (props) => {
 
   const outputPart = (
     <div className="output">
-      <h3>输出</h3>
-      <div className="button-part">
-        <CopyToClipboard
-          text={output}
-          onCopy={() => {
-            toast.success("复制TS 成功");
-            console.log("复制TS 成功", output);
-          }}
-        >
-          <div className="btn">复制TS</div>
-        </CopyToClipboard>
-      </div>
-
-      <SyntaxHighlighter
-        language="typescript"
-        style={theme}
-        showLineNumbers={showLineNumber}
-        customStyle={{
-          fontSize: "14px",
-          margin: "0",
-          minHeight: "78vh",
-          width: "100%",
-          minWidth: "400px",
-        }}
-      >
-        {output}
-      </SyntaxHighlighter>
+      <h3>TypeScript</h3>
+      <CodeBox data={output} language="typescript"></CodeBox>
     </div>
   );
-
-  const mockDataPart = 1;
-  const mockFactoryPart = 2;
-  const mockConfigPart = 3;
 
   return (
     <div className="HomePage" style={styles.all}>
@@ -183,14 +155,8 @@ const HomePage: React.FC<Props> = (props) => {
       </div>
       <div className="wrapper" style={styles.wrapper}>
         <MockDataBox data={inputData?.jsObject}></MockDataBox>
-        <div>foo</div>
+        <div>to be ...</div>
       </div>
-
-      <ToastContainer
-        autoClose={2000}
-        transition={Slide}
-        position={toast.POSITION.TOP_CENTER}
-      ></ToastContainer>
     </div>
   );
 };

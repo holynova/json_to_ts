@@ -10,6 +10,9 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import "./CodeBox.scss";
 import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
+import CopyToClipboard from "react-copy-to-clipboard";
+import show from "../../../utils/show";
+
 // import  {log} from ''
 interface Props {
   data: any;
@@ -19,29 +22,43 @@ interface Props {
 
 const CodeBox: React.FC<Props> = (props: Props) => {
   // const [loading, setLoading] = useState(false)
-  const output = JSON.stringify(props?.data, null, 2);
+  const output =
+    typeof props?.data === "string"
+      ? props?.data
+      : JSON.stringify(props?.data, null, 2);
 
   return (
     <div className="CodeBox">
-      {/* <h3>CodeBox</h3> */}
-      {props?.language ? (
-        <SyntaxHighlighter
-          language={props?.language}
-          style={theme}
-          showLineNumbers={!!props?.showLineNumber}
-          customStyle={{
-            fontSize: "14px",
-            margin: "0",
-            minHeight: "78vh",
-            width: "100%",
-            minWidth: "400px",
+      <div className="button-part">
+        <CopyToClipboard
+          text={output}
+          onCopy={() => {
+            show.success("复制TS 成功");
           }}
         >
-          {output}
-        </SyntaxHighlighter>
-      ) : (
-        <pre>{output}</pre>
-      )}
+          <div className="btn">复制</div>
+        </CopyToClipboard>
+      </div>
+      <div className="code-wrapper">
+        {props?.language ? (
+          <SyntaxHighlighter
+            language={props?.language}
+            style={theme}
+            showLineNumbers={!!props?.showLineNumber}
+            customStyle={{
+              fontSize: "14px",
+              margin: "0",
+              minHeight: "600px",
+              width: "100%",
+              minWidth: "400px",
+            }}
+          >
+            {output}
+          </SyntaxHighlighter>
+        ) : (
+          <pre>{output}</pre>
+        )}
+      </div>
     </div>
   );
 };
