@@ -12,6 +12,7 @@ import CodeBox from "./CodeBox";
 // import  {log} from ''
 interface Props {
   data: any;
+  error?: string;
 }
 
 const converter = new Converter({});
@@ -36,7 +37,8 @@ const MockDataBox: React.FC<Props> = (props: Props) => {
           重新生成
         </div>
       </div>
-      <CodeBox data={output} language="typescript"></CodeBox>
+
+      <CodeBox data={props.error || output} language="typescript"></CodeBox>
     </div>
   );
 };

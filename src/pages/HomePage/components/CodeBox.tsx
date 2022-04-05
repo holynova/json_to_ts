@@ -33,7 +33,7 @@ const CodeBox: React.FC<Props> = (props: Props) => {
         <CopyToClipboard
           text={output}
           onCopy={() => {
-            show.success("复制TS 成功");
+            show.success("复制成功");
           }}
         >
           <div className="btn">复制</div>

@@ -1,27 +1,17 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useState, useEffect } from "react";
 //  import {} from 'antd'
 import "./HomePage.scss";
 // import  {log} from ''
 
 import CSS from "csstype";
-
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
-// import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/prism";
 import convert from "json-to-ts";
-
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import JSONInput from "react-json-editor-ajrm";
 
 //@ts-ignore
 import locale from "react-json-editor-ajrm/locale/zh-cn";
 
+const convertJsonToTypeScript = convert;
 const styles: { [key: string]: CSS.Properties } = {
   all: {
     background: "#000",
@@ -34,9 +24,8 @@ const styles: { [key: string]: CSS.Properties } = {
 };
 interface Props {}
 
-import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { sampleData, sampleData2, sampleData3 } from "./sampleData";
+import { sampleData } from "./sampleData";
 import MockDataBox from "./components/MockDataBox";
 import show from "../../utils/show";
 import CodeBox from "./components/CodeBox";
@@ -67,10 +56,13 @@ function genInitInput(sample: object) {
 
 const HomePage: React.FC<Props> = (props) => {
   const [inputData, setInputData] = useState<InputData>(blank);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   // const [input, setInput] = useState<object | any[]>(sampleData2);
   const [output, setOutput] = useState("");
   const [showLineNumber, setShowLineNumber] = useState(true);
   const [initialInput, setInitialInput] = useState<object | any[]>(sampleData);
+
   useEffect(() => {
     if (inputData.error) {
       setOutput("输入有错误, 请修改");
@@ -78,7 +70,7 @@ const HomePage: React.FC<Props> = (props) => {
     }
     if (inputData?.jsObject) {
       console.time("convert");
-      let res = convert(inputData?.jsObject).join("\n\n");
+      let res = convertJsonToTypeScript(inputData?.jsObject).join("\n\n");
       setOutput(res);
       console.timeEnd("convert");
     }
@@ -125,16 +117,19 @@ const HomePage: React.FC<Props> = (props) => {
         // placeholder={inputData?.jsObject || {}} // data to display
         placeholder={initialInput}
         onChange={(d: InputData) => {
-          setInputData(d);
-          console.log("onChange", d);
-          // setInput(d?.jsObject || {});
+          if (d.error) {
+            setError("输入有错,请修改");
+          } else {
+            setError("");
+            setInputData(d);
+          }
         }}
         theme="dark"
         locale={locale}
         colors={{
           string: "#DAA520", // overrides theme colors with whatever color value you want
         }}
-        height="80vh"
+        height="600px"
       />
     </div>
   );
@@ -154,7 +149,7 @@ const HomePage: React.FC<Props> = (props) => {
         {outputPart}
       </div>
       <div className="wrapper" style={styles.wrapper}>
-        <MockDataBox data={inputData?.jsObject}></MockDataBox>
+        <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
         <div>to be ...</div>
       </div>
     </div>
