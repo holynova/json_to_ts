@@ -23,7 +23,9 @@
   }
   .button-part{
     overflow: hidden;
-    .btn{
+    
+  }
+  .btn{
       display: inline-block;
       overflow: hidden;
       display: inline;
@@ -37,5 +39,4 @@
         color:#000;
       }
     }
-  }
 }

@@ -30,6 +30,8 @@ import MockDataBox from "./components/MockDataBox";
 import show from "../../utils/show";
 import CodeBox from "./components/CodeBox";
 import CopyBox from "../../common/components/CopyBox";
+import CodeDownloader from "../../common/components/CodeDownloader";
+import { mainCode, utilCode } from "./template";
 
 interface InputData {
   plainText?: string;
@@ -149,7 +151,14 @@ const HomePage: React.FC<Props> = (props: Props) => {
       </div>
       <div className="wrapper" style={styles.wrapper}>
         <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
-        <div>to be ...</div>
+        <div>
+          <h3>下载生成器代码</h3>
+          <CodeDownloader data={mainCode} fileName="main.ts"></CodeDownloader>
+          <CodeDownloader
+            data={utilCode}
+            fileName="convert.ts"
+          ></CodeDownloader>
+        </div>
       </div>
     </div>
   );
