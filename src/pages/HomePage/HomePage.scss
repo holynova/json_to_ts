@@ -21,12 +21,21 @@
       
     }
   }
-  .btn{
-    display: inline;
-    color:lightblue;
-    padding:8px;
-    cursor: pointer;
-    margin-bottom: 8px;
+  .button-part{
+    overflow: hidden;
+    .btn{
+      display: inline-block;
+      overflow: hidden;
+      display: inline;
+      color:lightblue;
+      padding:16px;
+      // padding-left: 0;
+      cursor: pointer;
+      // margin: 8px;
+      &:hover{
+        background-color: #fff;
+        color:#000;
+      }
+    }
   }
-
 }

@@ -36,7 +36,8 @@ interface Props {}
 
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { sampleData2 } from "./utils";
+import { sampleData2, sampleData3 } from "./utils";
+import MockDataBox from "./components/MockDataBox";
 
 interface InputData {
   plainText?: string;
@@ -56,12 +57,18 @@ const blank: InputData = {
   error: false,
 };
 
+function genInitInput(sample: object) {
+  let clone = { ...blank };
+  clone.jsObject = sample;
+  return clone;
+}
+
 const HomePage: React.FC<Props> = (props) => {
   const [inputData, setInputData] = useState<InputData>(blank);
   // const [input, setInput] = useState<object | any[]>(sampleData2);
   const [output, setOutput] = useState("");
   const [showLineNumber, setShowLineNumber] = useState(true);
-
+  const [initialInput, setInitialInput] = useState<object | any[]>(sampleData3);
   useEffect(() => {
     if (inputData.error) {
       setOutput("输入有错误, 请修改");
@@ -83,6 +90,7 @@ const HomePage: React.FC<Props> = (props) => {
           className="btn"
           onClick={() => {
             setInputData(blank);
+            setInitialInput({});
             // setInput({});
           }}
         >
@@ -114,6 +122,7 @@ const HomePage: React.FC<Props> = (props) => {
           },
         }}
         // placeholder={inputData?.jsObject || {}} // data to display
+        placeholder={initialInput}
         onChange={(d: InputData) => {
           setInputData(d);
           console.log("onChange", d);
@@ -132,15 +141,17 @@ const HomePage: React.FC<Props> = (props) => {
   const outputPart = (
     <div className="output">
       <h3>输出</h3>
-      <CopyToClipboard
-        text={output}
-        onCopy={() => {
-          toast.success("复制TS 成功");
-          console.log("复制TS 成功", output);
-        }}
-      >
-        <div className="btn">复制TS</div>
-      </CopyToClipboard>
+      <div className="button-part">
+        <CopyToClipboard
+          text={output}
+          onCopy={() => {
+            toast.success("复制TS 成功");
+            console.log("复制TS 成功", output);
+          }}
+        >
+          <div className="btn">复制TS</div>
+        </CopyToClipboard>
+      </div>
 
       <SyntaxHighlighter
         language="typescript"
@@ -159,6 +170,10 @@ const HomePage: React.FC<Props> = (props) => {
     </div>
   );
 
+  const mockDataPart = 1;
+  const mockFactoryPart = 2;
+  const mockConfigPart = 3;
+
   return (
     <div className="HomePage" style={styles.all}>
       <div className="title">JS 转 TS</div>
@@ -166,6 +181,11 @@ const HomePage: React.FC<Props> = (props) => {
         {inputPart}
         {outputPart}
       </div>
+      <div className="wrapper" style={styles.wrapper}>
+        <MockDataBox data={inputData?.jsObject}></MockDataBox>
+        <div>foo</div>
+      </div>
+
       <ToastContainer
         autoClose={2000}
         transition={Slide}

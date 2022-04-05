@@ -1,0 +1,204 @@
+import Mock from "mockjs";
+import { random } from "./rand";
+
+const mock = Mock.Random;
+
+function getType(val: any) {
+  return Object.prototype.toString.call(val);
+}
+
+function isSameType(val: any, sample: any) {
+  return getType(val) === getType(sample);
+}
+
+function isEndWith(inputStr: string, endWithStr: string) {
+  if (typeof inputStr !== "string") {
+    return false;
+  }
+  // TODO 如果是驼峰, 那就先切片, 拿到最后一个再处理
+  return inputStr.toLowerCase().endsWith(endWithStr.toLowerCase());
+}
+
+const mockConfig = {
+  strMin: 1,
+  strMax: 10,
+  strPrefix: false,
+  strSuffix: true,
+
+  numberMin: 1,
+  numberMax: 9999,
+
+  arrayMin: 1,
+  arrayMax: 10,
+  arrayOnlyFirst: true,
+
+  useSematic: true,
+};
+
+export class Converter {
+  input: object;
+  sematicDict: { [key: string]: Function };
+
+  constructor(input: object) {
+    this.input = input;
+    this.sematicDict = this.makeSematicDict();
+  }
+
+  setInput(input: object) {
+    this.input = input;
+  }
+  makeSematicDict() {
+    let userDict = {
+      // name: 1,
+      // date: 2,
+      // color: 3,
+      // id: 4,
+      // city: 5,
+      // mail: 6,
+      id: mock.guid.bind(mock),
+      name: mock.cname.bind(mock),
+      title: mock.ctitle.bind(mock),
+    };
+    const allowedKeys = [
+      "date",
+      "time",
+      "datetime",
+      "image",
+      "img",
+      "dataImage",
+      "color",
+      "hex",
+      "rgb",
+      "rgba",
+      "hsl",
+      "paragraph",
+      "sentence",
+      "word",
+      "title",
+      "first",
+      "last",
+      "name",
+      "url",
+      "protocol",
+      "domain",
+      "email",
+      "ip",
+      "region",
+      "province",
+      "city",
+      "county",
+      "zip",
+      "order",
+      "guid",
+      "uuid",
+      "id",
+      "inc",
+    ];
+
+    let funcDict: { [key: string]: Function } = {};
+    allowedKeys.map((key) => {
+      let func = mock[key].bind(mock);
+      // let func = mock[key];
+      funcDict[key] = func;
+    });
+    funcDict = { ...funcDict, ...userDict };
+    return funcDict;
+  }
+
+  // 获取语义化数据,
+  // 返回值结构
+  getSematicData(key: string): [foundSematic: boolean, mockData: any] {
+    // 命中第一个规则就结束
+    const funcDict = this.sematicDict;
+    let endWithStrList = Object.keys(funcDict);
+    for (let i = 0; i < endWithStrList.length; i++) {
+      // TODO 增加startWith,比如isSame,hasFlag
+      let endStr = endWithStrList[i];
+      if (isEndWith(key, endStr)) {
+        let func = funcDict[endStr.toLowerCase()];
+        if (typeof func === "function") {
+          return [true, func.apply(mock)];
+        }
+        return [true, "sematic error:" + key];
+      }
+    }
+    // 全部规则都没有命中
+    return [false, null];
+  }
+
+  getMockData() {
+    let that = this;
+    function loop(data: any): any {
+      // object
+      if (isSameType(data, { a: 1 })) {
+        let res: { [key: string]: any } = {};
+        Object.keys(data).forEach((key) => {
+          if (mockConfig.useSematic) {
+            let [foundSematic, sematicMockData] = that.getSematicData(key);
+            if (foundSematic) {
+              res[key] = sematicMockData;
+            } else {
+              res[key] = loop(data[key]);
+            }
+          } else {
+            res[key] = loop(data[key]);
+          }
+        });
+        return res;
+      }
+
+      // array
+      if (isSameType(data, [1, 2, 3])) {
+        if (data.length === 0) {
+          return [];
+        }
+
+        if (mockConfig.arrayOnlyFirst) {
+          let max = random.int(mockConfig.arrayMin, mockConfig.arrayMax);
+          let first = data[0];
+          return new Array(max).fill(0).map((x) => loop(first));
+        }
+
+        return data.map(loop);
+      }
+
+      // date
+      if (isSameType(data, new Date())) {
+        return mock.datetime();
+      }
+
+      // number
+      if (isSameType(data, 123)) {
+        return mock.integer(mockConfig.numberMin, mockConfig.numberMax);
+      }
+
+      // string
+      if (isSameType(data, "string")) {
+        let mockStr = mock.cword(mockConfig.arrayMin, mockConfig.arrayMax);
+
+        // let mockStr = mock.cword();
+
+        return `${mockConfig.strPrefix ? data : ""}${mockStr}${
+          mockConfig.strSuffix ? data : ""
+        }`;
+      }
+
+      // boolean
+      if (isSameType(data, true)) {
+        return mock.boolean();
+      }
+
+      // undefined
+      // null
+      // 以及其他类型
+      return data;
+    }
+    return loop(this.input);
+  }
+
+  getMockString() {}
+
+  getMockFactoryFunction() {}
+
+  getTypescriptInterface() {}
+}
