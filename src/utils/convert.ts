@@ -19,46 +19,55 @@ function isEndWith(inputStr: string, endWithStr: string) {
   return inputStr.toLowerCase().endsWith(endWithStr.toLowerCase());
 }
 
-const mockConfig = {
-  strMin: 1,
-  strMax: 10,
-  strPrefix: false,
-  strSuffix: true,
-
-  numberMin: 1,
-  numberMax: 9999,
-
-  arrayMin: 1,
-  arrayMax: 10,
-  arrayOnlyFirst: true,
-
-  useSematic: true,
-};
+interface ConfigModel {
+  strMin: number;
+  strMax: number;
+  strPrefix: boolean;
+  strSuffix: boolean;
+  numberMin: number;
+  numberMax: number;
+  arrayMin: number;
+  arrayMax: number;
+  arrayOnlyFirst: boolean;
+  useSematic: boolean;
+}
 
 export class Converter {
   input: object;
   sematicDict: { [key: string]: Function };
+  config: ConfigModel;
 
   constructor(input: object) {
     this.input = input;
     this.sematicDict = this.makeSematicDict();
+    this.config = {
+      strMin: 1,
+      strMax: 10,
+      strPrefix: false,
+      strSuffix: true,
+
+      numberMin: 1,
+      numberMax: 9999,
+
+      arrayMin: 1,
+      arrayMax: 10,
+      arrayOnlyFirst: true,
+
+      useSematic: true,
+    };
+  }
+
+  setConfig(newConfig: ConfigModel) {
+    this.config = { ...this.config, ...newConfig };
+    return this.config;
   }
 
   setInput(input: object) {
     this.input = input;
   }
+
   makeSematicDict() {
-    let userDict = {
-      // name: 1,
-      // date: 2,
-      // color: 3,
-      // id: 4,
-      // city: 5,
-      // mail: 6,
-      id: mock.guid.bind(mock),
-      name: mock.cname.bind(mock),
-      title: mock.ctitle.bind(mock),
-    };
+    let funcDict: { [key: string]: Function } = {};
 
     const allowedKeys = [
       "date",
@@ -96,18 +105,28 @@ export class Converter {
       "inc",
     ];
 
-    let funcDict: { [key: string]: Function } = {};
     allowedKeys.map((key) => {
       let func = mock[key].bind(mock);
-      // let func = mock[key];
       funcDict[key] = func;
     });
+
+    let userDict = {
+      id: mock.guid.bind(mock),
+      name: mock.cname.bind(mock),
+      title: mock.ctitle.bind(mock),
+    };
+
     funcDict = { ...funcDict, ...userDict };
     return funcDict;
   }
 
-  // 获取语义化数据,
-  // 返回值结构
+  /**
+   * 获取语义化数据
+   *
+   * @param {string} key
+   * @return {*}  {[foundSematic: boolean, mockData: any]}
+   * @memberof Converter
+   */
   getSematicData(key: string): [foundSematic: boolean, mockData: any] {
     // 命中第一个规则就结束
     const funcDict = this.sematicDict;
@@ -128,14 +147,14 @@ export class Converter {
   }
 
   getMockData() {
-    let that = this;
-    function loop(data: any): any {
+    const loop = (data: any): any => {
+      const mockConfig = this.config;
       // object
       if (isSameType(data, { a: 1 })) {
         let res: { [key: string]: any } = {};
         Object.keys(data).forEach((key) => {
           if (mockConfig.useSematic) {
-            let [foundSematic, sematicMockData] = that.getSematicData(key);
+            let [foundSematic, sematicMockData] = this.getSematicData(key);
             if (foundSematic) {
               res[key] = sematicMockData;
             } else {
@@ -193,11 +212,17 @@ export class Converter {
       // null
       // 以及其他类型
       return data;
-    }
+    };
+
     return loop(this.input);
   }
 
-  getMockConfig() {}
+  /**
+   *
+   * 生成mockjs预发的mock规则
+   * @memberof Converter
+   */
+  getMockRules() {}
 
   getMockFactoryFunction() {}
 
