@@ -131,6 +131,7 @@ const HomePage: React.FC<Props> = (props: Props) => {
         colors={{
           string: "#DAA520", // overrides theme colors with whatever color value you want
         }}
+        width="100%"
         height="600px"
       />
     </div>
@@ -150,12 +151,15 @@ const HomePage: React.FC<Props> = (props: Props) => {
   return (
     <div className="HomePage" style={styles.all}>
       <div className="title">JS 转 TS</div>
+
       <div className="wrapper" style={styles.wrapper}>
         {inputPart}
         {outputPart}
       </div>
+
       <div className="wrapper" style={styles.wrapper}>
         <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
+
         <div>
           <h3>下载生成器代码</h3>
           <CodeDownloader data={mainCode} fileName="main.ts"></CodeDownloader>

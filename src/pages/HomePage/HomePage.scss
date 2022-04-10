@@ -10,11 +10,16 @@
     // justify-content: space-between;
     margin: 0 auto;
     width: 80%;
+    > div{
+      flex:1;
+      // background-color: pink;
+    }
     h3{
       color: #fff;
     }
     .input{
       margin-right: 8px;
+      // background-color: lightgreen;
     }
     .output{
       margin-left: 8px;
