@@ -85,12 +85,14 @@ export class CombinationCreator {
     }
     let resultItemStringList = result
       .map((x, index) => {
-        return `${showRowNumber ? index + 1 : ""}${showRowNumber ? "," : ""}${
-          isValidArray(x) ? x.join(",") : x
-        }`;
-        // return showRowNumber ? `${index + 1},` : "" + x.join(",");
+        return isValidArray(x) ? x.join(",") : x;
       })
-      .sort();
+      .sort()
+      .map((x, index) => {
+        return `${showRowNumber ? index + 1 : ""}${
+          showRowNumber ? "," : ""
+        }${x}`;
+      });
     return resultItemStringList.join("\n");
   }
 
