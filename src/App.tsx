@@ -1,24 +1,24 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
-import HomePage from "./pages/HomePage/HomePage";
+import React from "react";
+import { Toaster } from "react-hot-toast";
 //  import {} from 'antd'
 // import './App.less'
 // import  {log} from ''
-import { Toaster } from "react-hot-toast";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import routes from "./routes";
 
 interface Props {}
 
+const router = createBrowserRouter(routes);
+
 const App: React.FC<Props> = (props) => {
-  // const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)r
   return (
     <div className="App">
+      <RouterProvider router={router} />
       <Toaster></Toaster>
-      <HomePage></HomePage>
+      {/* <HomePage></HomePage> */}
+      {/* <CombinationPage /> */}
+      {/* <DemoPage></DemoPage> */}
     </div>
   );
 };

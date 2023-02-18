@@ -148,26 +148,28 @@ const HomePage: React.FC<Props> = (props: Props) => {
     </div>
   );
 
+  const mockDataPart = (
+    <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
+  );
+
+  const downloadPart = (
+    <div>
+      <h3>下载生成器代码</h3>
+      <CodeDownloader data={mainCode} fileName="main.ts"></CodeDownloader>
+      <CodeDownloader data={utilCode} fileName="convert.ts"></CodeDownloader>
+    </div>
+  );
+
   return (
     <div className="HomePage" style={styles.all}>
       <div className="title">JS 转 TS</div>
-
       <div className="wrapper" style={styles.wrapper}>
         {inputPart}
         {outputPart}
       </div>
-
       <div className="wrapper" style={styles.wrapper}>
-        <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
-
-        <div>
-          <h3>下载生成器代码</h3>
-          <CodeDownloader data={mainCode} fileName="main.ts"></CodeDownloader>
-          <CodeDownloader
-            data={utilCode}
-            fileName="convert.ts"
-          ></CodeDownloader>
-        </div>
+        {mockDataPart}
+        {downloadPart}
       </div>
     </div>
   );

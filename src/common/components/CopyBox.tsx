@@ -5,9 +5,12 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-// import {} from "antd";
-import CopyToClipboard from "react-copy-to-clipboard";
+// import { messsage} from "antd";
 import show from "../../utils/show";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
+// const show = messsage
+
 // import './CopyBox.less'
 // import  {log} from ''
 interface Props {
@@ -17,19 +20,18 @@ interface Props {
 }
 
 const CopyBox: React.FC<Props> = (props: Props) => {
-  // const [loading, setLoading] = useState(false)
   return (
-    <span className="CopyBox">
-      <CopyToClipboard
-        text={props?.text}
-        onCopy={() => {
+    <CopyToClipboard
+      text={props?.text}
+      onCopy={() => {
+        if (props?.text) {
           show.success(props?.successMessage || "复制成功");
-        }}
-      >
-        {/* <div className="btn">{props?.children || "复制"}</div> */}
-        {props?.children || "复制"}
-      </CopyToClipboard>
-    </span>
+        }
+      }}
+    >
+      {props.children || <span>复制</span>}
+      {/* <span>复制</span> */}
+    </CopyToClipboard>
   );
 };
 
