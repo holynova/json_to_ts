@@ -145,8 +145,7 @@ export class CombinationCreator {
   go(text: string, removeDuplicated?: boolean) {
     const factorList = this.getFactorsFromText(text);
     const res = this.combine(factorList, removeDuplicated);
-
-    this.printResult(res);
+    // this.printResult(res);
     return res;
   }
 }

@@ -12,6 +12,7 @@ import download from "downloadjs";
 interface Props {
   fileName: string;
   data: string;
+  prefix?: string;
 }
 
 const CodeDownloader: React.FC<Props> = (props: Props) => {
@@ -28,7 +29,7 @@ const CodeDownloader: React.FC<Props> = (props: Props) => {
     <div className="CodeDownloader">
       {/* <h3>CodeDownloader</h3> */}
       <div className="btn" onClick={startDownload}>
-        {`下载${props?.fileName || "文件"}`}
+        {`${props?.prefix || "下载"} ${props?.fileName || "文件"}`}
       </div>
     </div>
   );

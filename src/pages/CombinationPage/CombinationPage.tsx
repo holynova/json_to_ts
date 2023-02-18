@@ -5,7 +5,17 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import { Input, Table, Button, Checkbox, Switch, Spin } from "antd";
+import {
+  Input,
+  Table,
+  Button,
+  Checkbox,
+  Switch,
+  Spin,
+  Divider,
+  Space,
+  Pagination,
+} from "antd";
 import CSS from "csstype";
 
 import {
@@ -66,13 +76,17 @@ const CombinationPage: React.FC<Props> = (props) => {
   const tablePart = (
     <Table
       size="small"
+      bordered
       columns={tableProps.columns}
       dataSource={tableProps.dataSource}
       pagination={{
         size: "small",
-        total: tableProps.columns.length,
+        total: result.length,
         showSizeChanger: true,
         showQuickJumper: true,
+        defaultPageSize: 10,
+        showTotal: (total, range) =>
+          `${range[0]}-${range[1]} of ${total} items`,
       }}
     />
   );
@@ -80,7 +94,16 @@ const CombinationPage: React.FC<Props> = (props) => {
     <div className="CombinationPage" style={styles.wrapper}>
       <Spin spinning={loading}></Spin>
       <h3>排列组合生成器</h3>
-      <div>输入因子: 每一行是一组因子, 因子之间用空格分隔</div>
+      <p>输入因子: 每一行是一组因子, 因子之间用空格分隔</p>
+      <p>
+        <Space>
+          去除重复
+          <Switch
+            checked={removeDuplicated}
+            onChange={(checked) => setRemoveDuplicated(checked)}
+          />
+        </Space>
+      </p>
       <Input.TextArea
         allowClear
         showCount
@@ -88,22 +111,26 @@ const CombinationPage: React.FC<Props> = (props) => {
         onChange={(e) => onTextChange(e.target.value)}
         rows={8}
       ></Input.TextArea>
-      去重
-      <Switch
-        checked={removeDuplicated}
-        onChange={(checked) => setRemoveDuplicated(checked)}
-      />
-      <h3>结果数量:{count}</h3>
+
+      <Divider></Divider>
       {/* <h3>结果数量(去重):{uniqueCount}</h3> */}
-      <CopyBox text={creator.toString(result, false)}>
-        <Button type="link">复制结果</Button>
-      </CopyBox>
-      <Button type="link">
-        <CodeDownloader
-          data={creator.toCSV(result)}
-          fileName={`combination${Date.now()}.csv`}
-        ></CodeDownloader>
-      </Button>
+      <p>
+        <Space>
+          <span>结果数量:{count}</span>
+          <CopyBox text={creator.toString(result, false)}>
+            <Button type="primary" ghost>
+              复制结果
+            </Button>
+          </CopyBox>
+          <Button type="primary" ghost>
+            <CodeDownloader
+              data={creator.toCSV(result)}
+              prefix="下载CSV文件: "
+              fileName={`combination${Date.now()}.csv`}
+            ></CodeDownloader>
+          </Button>
+        </Space>
+      </p>
       {/* <div>{creator.toString(result, true)}</div> */}
       {tablePart}
     </div>
