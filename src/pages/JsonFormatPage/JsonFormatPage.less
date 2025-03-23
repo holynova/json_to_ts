@@ -1,0 +1,36 @@
+// 定义变量（可选）
+@bg-color: #ffe; // 背景颜色
+@error-color: red; // 错误提示颜色
+
+// 样式
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.input-section,
+.output-section {
+  flex: 1;
+  padding: 10px;
+  overflow: auto;
+}
+
+.input-textarea {
+  width: 100%;
+  height: 90%;
+  font-family: monospace;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.output-section {
+  background-color: @bg-color;
+}
+
+.json-view {
+  background-color: @bg-color;
+}
+
+.error-message {
+  color: @error-color;
+}

@@ -3,6 +3,7 @@ import CombinationPage from "./pages/CombinationPage/CombinationPage";
 import DemoPage from "./pages/DemoPage/DemoPage";
 import HomePage from "./pages/HomePage/HomePage";
 import MainPage from "./pages/MainPage/MainPage";
+import JsonFormatPage from "./pages/JsonFormatPage/JsonFormatPage";
 
 const routes: RouteObject[] = [
   {
@@ -20,6 +21,11 @@ const routes: RouteObject[] = [
     name: "js to ts",
     path: "/ts",
     element: <HomePage />,
+  },
+  {
+    name: "json format",
+    path: "/json",
+    element: <JsonFormatPage />,
   },
   {
     path: "/",
