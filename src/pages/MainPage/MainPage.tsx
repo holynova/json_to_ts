@@ -1,28 +1,52 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import routes from "../../routes";
-// import './MainPage.less'
-// import  {log} from ''
-interface Props {}
+import "antd/dist/reset.css";
+import "./MainPage.less";
+import { Switch } from "antd";
 
-const MainPage: React.FC<Props> = (props) => {
-  // const [loading, setLoading] = useState(false)
+interface RouteItem {
+  path: string;
+  name: string;
+  description?: string;
+}
+
+const MainPage: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const navRoutes = routes.filter((route) => route.path !== "/") as RouteItem[];
+
+  const toggleDarkMode = (checked: boolean) => {
+    setIsDarkMode(checked);
+  };
+
   return (
-    <div className="MainPage">
-      <h3>MainPage</h3>
-      {routes.map((x) => {
-        return (
-          <div key={x.path}>
-            <Link to={x.path}>{x.name}</Link>
-          </div>
-        );
-      })}
+    <div className={`MainPage ${isDarkMode ? "dark" : ""}`}>
+      <div style={{ position: "absolute", top: 24, right: 24 }}>
+        <Switch
+          checkedChildren="🌙"
+          unCheckedChildren="☀️"
+          checked={isDarkMode}
+          onChange={toggleDarkMode}
+        />
+      </div>
+
+      <div className="header">
+        <h1>JSON to TypeScript</h1>
+        <div className="description">
+          Convert JSON to TypeScript interfaces with ease
+        </div>
+      </div>
+
+      <div className="nav-grid">
+        {navRoutes.map((route) => (
+          <Link to={route.path} key={route.path} className="nav-card">
+            <div className="title">{route.name}</div>
+            {route.description && (
+              <div className="description">{route.description}</div>
+            )}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
