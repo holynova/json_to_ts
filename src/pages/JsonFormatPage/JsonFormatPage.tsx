@@ -2,6 +2,9 @@ import React, { useState, ChangeEvent } from "react";
 import JSON5 from "json5";
 import { jsonrepair } from "jsonrepair";
 import ReactJson from "react-json-view";
+import SplitPane from "react-split-pane";
+import { Tabs } from "antd";
+import jsonToTs from "json-to-ts";
 import "./JsonFormatPage.less"; // 修复样式文件路径
 
 interface JsonData {
@@ -12,6 +15,8 @@ type FormatState =
   | "correct"
   | "errorButCorrected"
   | "errorAndNotCorrected";
+
+const { TabPane } = Tabs;
 
 const JsonFormatPage = () => {
   const [input, setInput] = useState<string>(
@@ -50,8 +55,39 @@ const JsonFormatPage = () => {
     }
   };
 
+  const renderJsonTab = () => (
+    <>
+      <p className="state-message">
+        {state === "correct" && "原JSON 格式正确"}
+        {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
+        {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
+      </p>
+      {error ? (
+        <p className="error-message">{error}</p>
+      ) : (
+        json && (
+          <ReactJson
+            src={json}
+            displayObjectSize={false}
+            displayDataTypes={false}
+            theme={"rjv-default"}
+            collapsed={false}
+          />
+        )
+      )}
+    </>
+  );
+
+  const renderCompressedTab = () => (
+    <pre>{json ? JSON.stringify(json, null, 0) : ""}</pre>
+  );
+
+  const renderTypesTab = () => (
+    <pre>{json ? jsonToTs(json).join("\n\n") : ""}</pre>
+  );
+
   return (
-    <div className="container">
+    <SplitPane split="vertical" defaultSize="50%">
       <div className="input-section">
         <h3>输入 JSON 字符串</h3>
         <textarea
@@ -62,27 +98,19 @@ const JsonFormatPage = () => {
         />
       </div>
       <div className="output-section">
-        <h3>修复和格式化后的 JSON</h3>
-        <p className="state-message">
-          {state === "correct" && "原JSON 格式正确"}
-          {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
-          {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
-        </p>
-        {error ? (
-          <p className="error-message">{error}</p>
-        ) : (
-          json && (
-            <ReactJson
-              src={json}
-              displayObjectSize={false}
-              displayDataTypes={false}
-              theme={"rjv-default"}
-              collapsed={false}
-            />
-          )
-        )}
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="格式化JSON" key="1">
+            {renderJsonTab()}
+          </TabPane>
+          <TabPane tab="压缩JSON" key="2">
+            {renderCompressedTab()}
+          </TabPane>
+          <TabPane tab="TS类型" key="3">
+            {renderTypesTab()}
+          </TabPane>
+        </Tabs>
       </div>
-    </div>
+    </SplitPane>
   );
 };
 

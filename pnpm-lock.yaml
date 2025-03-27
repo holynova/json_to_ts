@@ -14,6 +14,12 @@ importers:
       '@types/mockjs':
         specifier: ^1.0.6
         version: 1.0.10
+      '@types/react-split-pane':
+        specifier: ^0.1.67
+        version: 0.1.67(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      add:
+        specifier: ^2.0.6
+        version: 2.0.6
       antd:
         specifier: ^5.1.7
         version: 5.24.4(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -32,6 +38,9 @@ importers:
       mockjs:
         specifier: ^1.1.0
         version: 1.1.0
+      pnpm:
+        specifier: ^10.7.0
+        version: 10.7.0
       react:
         specifier: ^17.0.2
         version: 17.0.2
@@ -56,6 +65,9 @@ importers:
       react-router-dom:
         specifier: ^6.8.0
         version: 6.30.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      react-split-pane:
+        specifier: ^0.1.92
+        version: 0.1.92(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-syntax-highlighter:
         specifier: ^15.4.5
         version: 15.6.1(react@17.0.2)
@@ -440,6 +452,10 @@ packages:
   '@types/react-json-editor-ajrm@2.5.6':
     resolution: {integrity: sha512-Dk8WUF0UPzHCnDfgNQ7EBtjZRsHLZPfjm/fFZOrHVO4TbD1EQpKS/i8p3EpVEnvgE5LJack35eAxFjxN1UWMnA==, tarball: https://registry.npmmirror.com/@types/react-json-editor-ajrm/-/react-json-editor-ajrm-2.5.6.tgz}
 
+  '@types/react-split-pane@0.1.67':
+    resolution: {integrity: sha512-2vq9mohqYZ7kR+XcedfjyI2M7/E8W5owr0KupGGP+TfFp/O9f6c/S06MCB3FKWiBwazA7+Zyj50OTxvYy1kGLA==}
+    deprecated: This is a stub types definition for react-split-pane (https://github.com/tomkp/react-split-pane). react-split-pane provides its own type definitions, so you don't need @types/react-split-pane installed!
+
   '@types/react-syntax-highlighter@13.5.2':
     resolution: {integrity: sha512-sRZoKZBGKaE7CzMvTTgz+0x/aVR58ZYUTfB7HN76vC+yQnvo1FWtzNARBt0fGqcLGEVakEzMu/CtPzssmanu8Q==, tarball: https://registry.npmmirror.com/@types/react-syntax-highlighter/-/react-syntax-highlighter-13.5.2.tgz}
 
@@ -455,6 +471,9 @@ packages:
   '@vitejs/plugin-react@1.3.2':
     resolution: {integrity: sha512-aurBNmMo0kz1O4qRoY+FM4epSA39y3ShWGuqfLRA/3z0oEJAdtoSfgA3aO98/PCCHAqMaduLxIxErWrVKIFzXA==, tarball: https://registry.npmmirror.com/@vitejs/plugin-react/-/plugin-react-1.3.2.tgz}
     engines: {node: '>=12.0.0'}
+
+  add@2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   antd@5.24.4:
     resolution: {integrity: sha512-s89666DcoWeekJFaIqbtz2vRlIvgPR28GuDYYGUpW1mVP08bV7HZAPBH5lFJKYNGKrN3dHbZGgRK5aNRD2iPHg==, tarball: https://registry.npmmirror.com/antd/-/antd-5.24.4.tgz}
@@ -1181,6 +1200,11 @@ packages:
   pluralize@3.1.0:
     resolution: {integrity: sha512-2wcybwjwXOzGI1rlxWtlcs0/nSYK0OzNPqsg35TKxJFQlGhFu3cZ1x7EHS4r4bubQlhzyF4YxxlJqQnIhkUQCw==, tarball: https://registry.npmmirror.com/pluralize/-/pluralize-3.1.0.tgz}
 
+  pnpm@10.7.0:
+    resolution: {integrity: sha512-a4Za1LYqHZhCth1nSjk5A7hx2SRJVPZSuIQsK1U8chdrJ49kxGPlLUD/+KujhcI1yMns9cx95P14uLttSWM6tg==}
+    engines: {node: '>=18.12'}
+    hasBin: true
+
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==, tarball: https://registry.npmmirror.com/possible-typed-array-names/-/possible-typed-array-names-1.1.0.tgz}
     engines: {node: '>= 0.4'}
@@ -1504,6 +1528,15 @@ packages:
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
+
+  react-split-pane@0.1.92:
+    resolution: {integrity: sha512-GfXP1xSzLMcLJI5BM36Vh7GgZBpy+U/X0no+VM3fxayv+p1Jly5HpMofZJraeaMl73b3hvlr+N9zJKvLB/uz9w==}
+    peerDependencies:
+      react: ^16.0.0-0
+      react-dom: ^16.0.0-0
+
+  react-style-proptype@3.2.2:
+    resolution: {integrity: sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==}
 
   react-syntax-highlighter@15.6.1:
     resolution: {integrity: sha512-OqJ2/vL7lEeV5zTJyG7kmARppUjiB9h9udl4qHQjjgEos66z00Ia0OckwYfRxCSFrW8RJIBnsBwQsHZbVPspqg==, tarball: https://registry.npmmirror.com/react-syntax-highlighter/-/react-syntax-highlighter-15.6.1.tgz}
@@ -2183,6 +2216,13 @@ snapshots:
     dependencies:
       '@types/react': 17.0.84
 
+  '@types/react-split-pane@0.1.67(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+    dependencies:
+      react-split-pane: 0.1.92(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
   '@types/react-syntax-highlighter@13.5.2':
     dependencies:
       '@types/react': 17.0.84
@@ -2209,6 +2249,8 @@ snapshots:
       resolve: 1.22.10
     transitivePeerDependencies:
       - supports-color
+
+  add@2.0.6: {}
 
   antd@5.24.4(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
@@ -3054,6 +3096,8 @@ snapshots:
 
   pluralize@3.1.0: {}
 
+  pnpm@10.7.0: {}
+
   possible-typed-array-names@1.1.0: {}
 
   postcss@8.5.3:
@@ -3475,6 +3519,18 @@ snapshots:
     dependencies:
       '@remix-run/router': 1.23.0
       react: 17.0.2
+
+  react-split-pane@0.1.92(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      react-lifecycles-compat: 3.0.4
+      react-style-proptype: 3.2.2
+
+  react-style-proptype@3.2.2:
+    dependencies:
+      prop-types: 15.8.1
 
   react-syntax-highlighter@15.6.1(react@17.0.2):
     dependencies:
