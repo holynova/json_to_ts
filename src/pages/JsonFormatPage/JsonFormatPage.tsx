@@ -1,9 +1,10 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useMemo } from "react";
 import JSON5 from "json5";
 import { jsonrepair } from "jsonrepair";
 import ReactJson from "react-json-view";
 import SplitPane from "react-split-pane";
 import { Tabs } from "antd";
+import CopyBox from "../../common/components/CopyBox";
 import jsonToTs from "json-to-ts";
 import "./JsonFormatPage.less"; // 修复样式文件路径
 
@@ -17,11 +18,10 @@ type FormatState =
   | "errorAndNotCorrected";
 
 const { TabPane } = Tabs;
-
+const mock1 = `{"name": "Alice", "age": 25, "data": {"score": 90, "active": true}}`;
+const mock2 = `{"yesterday":{"date":"21日星期三","sunrise":"06:19","high":"高温 11.0℃","low":"低温 1.0℃","sunset":"18:26","aqi":85,"fx":"南风","fl":"<3级","type":"多云","notice":"阴晴之间，谨防紫外线侵扰"},"forecast":[{"date":"22日星期四","sunrise":"06:17","high":"高温 17.0℃","low":"低温 1.0℃","sunset":"18:27","aqi":98,"fx":"西南风","fl":"<3级","type":"晴","notice":"愿你拥有比阳光明媚的心情"},{"date":"23日星期五","sunrise":"06:16","high":"高温 18.0℃","low":"低温 5.0℃","sunset":"18:28","aqi":null}]}`;
 const JsonFormatPage = () => {
-  const [input, setInput] = useState<string>(
-    `{name: "Alice", age: 25, data: {score: 90, active: true}`,
-  );
+  const [input, setInput] = useState<string>(mock2);
   const [json, setJson] = useState<JsonData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [state, setState] = useState<FormatState>("initial");
@@ -55,6 +55,19 @@ const JsonFormatPage = () => {
     }
   };
 
+  const jsonString = useMemo(
+    () => (json ? JSON.stringify(json, null, 2) : ""),
+    [json],
+  );
+  const compressedJson = useMemo(
+    () => (json ? JSON.stringify(json, null, 0) : ""),
+    [json],
+  );
+  const typeDefinitions = useMemo(
+    () => (json ? jsonToTs(json).join("\n\n") : ""),
+    [json],
+  );
+
   const renderJsonTab = () => (
     <>
       <div className={`state-indicator ${state}`}>
@@ -69,24 +82,34 @@ const JsonFormatPage = () => {
         <p className="error-message">{error}</p>
       ) : (
         json && (
-          <ReactJson
-            src={json}
-            displayObjectSize={false}
-            displayDataTypes={false}
-            theme={"rjv-default"}
-            collapsed={false}
-          />
+          <>
+            <CopyBox text={jsonString} />
+            <ReactJson
+              style={{ padding: "10px", backgroundColor: "white" }}
+              src={json}
+              displayObjectSize={false}
+              displayDataTypes={false}
+              theme={"rjv-default"}
+              collapsed={false}
+            />
+          </>
         )
       )}
     </>
   );
 
   const renderCompressedTab = () => (
-    <pre>{json ? JSON.stringify(json, null, 0) : ""}</pre>
+    <>
+      <CopyBox text={compressedJson} />
+      <pre>{compressedJson}</pre>
+    </>
   );
 
   const renderTypesTab = () => (
-    <pre>{json ? jsonToTs(json).join("\n\n") : ""}</pre>
+    <>
+      <CopyBox text={typeDefinitions} />
+      <pre>{typeDefinitions}</pre>
+    </>
   );
 
   return (
