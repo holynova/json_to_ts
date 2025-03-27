@@ -65,10 +65,35 @@
   color: @error-color;
 }
 
-// 状态消息
-.state-message {
-  color: #666;
+// 状态指示器
+.state-indicator {
+  display: flex;
+  align-items: center;
   margin: 0 0 10px 0;
+  gap: 8px;
+
+  .status-light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc; // 默认灰色
+  }
+
+  &.correct .status-light {
+    background: #52c41a; // 绿色
+  }
+
+  &.errorButCorrected .status-light {
+    background: #faad14; // 黄色
+  }
+
+  &.errorAndNotCorrected .status-light {
+    background: #f5222d; // 红色
+  }
+
+  .status-text {
+    color: #666;
+  }
 }
 
 // Tab 内容区域

@@ -57,11 +57,14 @@ const JsonFormatPage = () => {
 
   const renderJsonTab = () => (
     <>
-      <p className="state-message">
-        {state === "correct" && "原JSON 格式正确"}
-        {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
-        {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
-      </p>
+      <div className={`state-indicator ${state}`}>
+        <span className="status-light"></span>
+        <span className="status-text">
+          {state === "correct" && "原JSON 格式正确"}
+          {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
+          {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
+        </span>
+      </div>
       {error ? (
         <p className="error-message">{error}</p>
       ) : (
