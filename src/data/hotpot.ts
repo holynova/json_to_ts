@@ -42,6 +42,30 @@ export const hotpotData = {
       desc: "煮至脆嫩",
       emoji: "🦆",
     },
+    {
+      name: "毛肚",
+      time: 30,
+      desc: "煮至脆嫩",
+      emoji: "🐄",
+    },
+    {
+      name: "黄喉",
+      time: 60,
+      desc: "煮至脆嫩",
+      emoji: "🐄",
+    },
+    {
+      name: "肥牛",
+      time: 30,
+      desc: "煮至变色",
+      emoji: "🐄",
+    },
+    {
+      name: "午餐肉",
+      time: 60,
+      desc: "煮至热透",
+      emoji: "🍖",
+    },
   ],
   seafood: [
     {
@@ -73,6 +97,24 @@ export const hotpotData = {
       time: 120,
       desc: "煮至开口",
       emoji: "🐚",
+    },
+    {
+      name: "生蚝",
+      time: 180,
+      desc: "煮至开口",
+      emoji: "🦪",
+    },
+    {
+      name: "鱼片",
+      time: 60,
+      desc: "煮至变色",
+      emoji: "🐟",
+    },
+    {
+      name: "墨鱼仔",
+      time: 120,
+      desc: "煮至嫩滑",
+      emoji: "🦑",
     },
   ],
   vegetables: [
@@ -118,6 +160,30 @@ export const hotpotData = {
       desc: "煮至透明",
       emoji: "🍈",
     },
+    {
+      name: "土豆",
+      time: 300,
+      desc: "煮至软烂",
+      emoji: "🥔",
+    },
+    {
+      name: "山药",
+      time: 180,
+      desc: "煮至软嫩",
+      emoji: "🥔",
+    },
+    {
+      name: "金针菇",
+      time: 60,
+      desc: "煮至软化",
+      emoji: "🍄",
+    },
+    {
+      name: "木耳",
+      time: 90,
+      desc: "煮至软化",
+      emoji: "🍄",
+    },
   ],
   others: [
     {
@@ -155,6 +221,30 @@ export const hotpotData = {
       time: 240,
       desc: "煮至浮起且熟透",
       emoji: "🍡",
+    },
+    {
+      name: "粉丝",
+      time: 120,
+      desc: "煮至透明",
+      emoji: "🍜",
+    },
+    {
+      name: "魔芋",
+      time: 180,
+      desc: "煮至软嫩",
+      emoji: "🍢",
+    },
+    {
+      name: "年糕",
+      time: 180,
+      desc: "煮至软糯",
+      emoji: "🍡",
+    },
+    {
+      name: "鹌鹑蛋",
+      time: 180,
+      desc: "煮至熟透",
+      emoji: "🥚",
     },
   ],
 };
