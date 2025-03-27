@@ -20,16 +20,20 @@ interface AnimatedTimerBarProps {
   name: string; // 定时器名称
   duration: number; // 总时长(秒)
   onRemove?: () => void; // 移除回调函数
+  onComplete?: () => void; // 完成回调函数
   height?: number; // 进度条高度(px)
   color?: string; // 进度条颜色
+  soundEnabled?: boolean; // 是否启用声音
 }
 
 const AnimatedTimerBar: React.FC<AnimatedTimerBarProps> = ({
   name,
   duration,
   onRemove,
+  onComplete,
   height = 48,
   color,
+  soundEnabled = true,
 }) => {
   const [remaining, setRemaining] = useState(duration);
   const [progress, setProgress] = useState(100);
@@ -53,7 +57,12 @@ const AnimatedTimerBar: React.FC<AnimatedTimerBarProps> = ({
         animationRef.current = requestAnimationFrame(animate);
       } else {
         message.success(`${name} 定时完成!`);
-        timerSound.play().catch((e) => console.error("播放声音失败:", e));
+        if (soundEnabled) {
+          timerSound.play().catch((e) => console.error("播放声音失败:", e));
+        }
+        if (onComplete) {
+          onComplete();
+        }
       }
     };
 
