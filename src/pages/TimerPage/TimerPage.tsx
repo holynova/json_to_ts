@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { List } from "antd";
 import TimerBar from "./component/TimerBar";
 import { hotpotData } from "../../data/hotpot";
+import AnimatedTimerBar from "./component/AnimatedTimerBar";
 
 interface ActiveTimer {
   name: string;
@@ -100,7 +101,7 @@ const TimerPage: React.FC = () => {
       >
         {activeTimers.map((timer) => (
           <div key={timer.id} style={{ width: "100%" }}>
-            <TimerBar
+            <AnimatedTimerBar
               name={timer.name}
               duration={timer.duration}
               onRemove={() => removeTimer(timer.id)}
