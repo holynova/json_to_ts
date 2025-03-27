@@ -7,6 +7,11 @@ import "./JsonFormatPage.less"; // 修复样式文件路径
 interface JsonData {
   [key: string]: any;
 }
+type FormatState =
+  | "initial"
+  | "correct"
+  | "errorButCorrected"
+  | "errorAndNotCorrected";
 
 const JsonFormatPage = () => {
   const [input, setInput] = useState<string>(
@@ -14,7 +19,7 @@ const JsonFormatPage = () => {
   );
   const [json, setJson] = useState<JsonData | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [state, setState] = useState<FormatState>("initial");
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const userInput = e.target.value;
     setInput(userInput);
@@ -23,14 +28,18 @@ const JsonFormatPage = () => {
       const parsedJson = JSON5.parse(userInput);
       setJson(parsedJson);
       setError(null);
+      setState("correct");
     } catch (parseError) {
       try {
         const repairedJson = jsonrepair(userInput);
         const parsedRepairedJson = JSON5.parse(repairedJson);
         setJson(parsedRepairedJson);
         setError(null);
+
+        setState("errorButCorrected");
       } catch (repairError) {
         setJson(null);
+        setState("errorAndNotCorrected");
         setError(
           "无法解析或修复 JSON: " +
             (repairError instanceof Error
@@ -54,16 +63,21 @@ const JsonFormatPage = () => {
       </div>
       <div className="output-section">
         <h3>修复和格式化后的 JSON</h3>
+        <p className="state-message">
+          {state === "correct" && "JSON 格式正确"}
+          {state === "errorButCorrected" && "JSON 格式错误，已修复"}
+          {state === "errorAndNotCorrected" && "JSON 格式错误，无法修复"}
+        </p>
         {error ? (
           <p className="error-message">{error}</p>
         ) : (
           json && (
             <ReactJson
               src={json}
+              displayObjectSize={false}
+              displayDataTypes={false}
               theme={"rjv-default"}
-              // theme="monokai"
               collapsed={false}
-              // className="json-view"
             />
           )
         )}
