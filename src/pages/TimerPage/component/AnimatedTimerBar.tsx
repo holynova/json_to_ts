@@ -3,19 +3,6 @@ import { message, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./AnimatedTimerBar.css"; // 引入样式文件
 
-// 创建音频对象 - 使用绝对路径访问音频文件
-const timerSound = new Audio("/timer_sound.mp3");
-timerSound.volume = 0.3; // 设置音量
-
-// 预加载音频
-try {
-  timerSound.load();
-} catch (e: unknown) {
-  if (e instanceof Error) {
-    console.warn("音频预加载失败:", e.message);
-  }
-}
-
 interface AnimatedTimerBarProps {
   name: string; // 定时器名称
   duration: number; // 总时长(秒)
@@ -58,6 +45,8 @@ const AnimatedTimerBar: React.FC<AnimatedTimerBarProps> = ({
       } else {
         message.success(`${name} 定时完成!`);
         if (soundEnabled) {
+          const timerSound = new Audio("/timer_sound.mp3");
+          timerSound.volume = 0.3;
           timerSound.play().catch((e) => console.error("播放声音失败:", e));
         }
         if (onComplete) {

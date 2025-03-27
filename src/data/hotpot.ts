@@ -1,6 +1,12 @@
 export const hotpotData = {
   meats: [
     {
+      name: "测试",
+      time: 2,
+      desc: "嫩滑口感；若喜欢熟透可煮至60秒",
+      emoji: "🐄",
+    },
+    {
       name: "牛肉片",
       time: 15,
       desc: "嫩滑口感；若喜欢熟透可煮至60秒",
