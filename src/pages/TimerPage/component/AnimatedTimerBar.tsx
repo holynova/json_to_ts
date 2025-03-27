@@ -90,8 +90,8 @@ const AnimatedTimerBar: React.FC<AnimatedTimerBarProps> = ({
         />
       </div>
 
-      {/* 名称和时间显示 */}
-      <div className="timer-info">
+      {/* 名称和时间显示 - 使用等宽字体避免数字抖动 */}
+      <div className="timer-info" style={{ fontFamily: "monospace" }}>
         {name} {formatTime(remaining)}
       </div>
 
