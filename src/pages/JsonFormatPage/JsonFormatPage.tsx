@@ -64,9 +64,9 @@ const JsonFormatPage = () => {
       <div className="output-section">
         <h3>修复和格式化后的 JSON</h3>
         <p className="state-message">
-          {state === "correct" && "JSON 格式正确"}
-          {state === "errorButCorrected" && "JSON 格式错误，已修复"}
-          {state === "errorAndNotCorrected" && "JSON 格式错误，无法修复"}
+          {state === "correct" && "原JSON 格式正确"}
+          {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
+          {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
         </p>
         {error ? (
           <p className="error-message">{error}</p>
