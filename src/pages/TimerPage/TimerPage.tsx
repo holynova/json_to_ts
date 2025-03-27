@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { List, Button, Space, Modal, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { List, Button, Space, Modal, message, Input, InputNumber } from "antd";
 import TimerBar from "./component/TimerBar";
 import { hotpotData } from "../../data/hotpot";
 import AnimatedTimerBar from "./component/AnimatedTimerBar";
@@ -11,24 +11,55 @@ interface ActiveTimer {
   startTime: number; // 记录定时器开始时间
 }
 
+const PRESET_TIMES = [
+  { label: "10秒", value: 10 },
+  { label: "1分钟", value: 60 },
+  { label: "10分钟", value: 600 },
+  { label: "25分钟", value: 1500 },
+];
+
 const TimerPage: React.FC = () => {
-  const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([]);
+  const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>(() => {
+    const saved = localStorage.getItem("activeTimers");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [timerId, setTimerId] = useState(0);
+  const [customName, setCustomName] = useState("");
+  const [customTime, setCustomTime] = useState(60);
   const [soundEnabled, setSoundEnabled] = useState(true); // 提示音开关状态
   const [sortAscending, setSortAscending] = useState(true); // 排序方向状态
 
+  // 保存定时器到localStorage
+  useEffect(() => {
+    localStorage.setItem("activeTimers", JSON.stringify(activeTimers));
+  }, [activeTimers]);
+
   // 添加计时器
   const addTimer = (name: string, duration: number) => {
-    setActiveTimers([
+    const displayName = name || `${duration}秒`;
+    const newTimers = [
       ...activeTimers,
       {
-        name,
+        name: displayName,
         duration,
         id: timerId,
         startTime: Date.now(),
       },
-    ]);
+    ];
+    setActiveTimers(newTimers);
     setTimerId(timerId + 1);
+  };
+
+  // 添加预设时间
+  const addPresetTimer = (duration: number) => {
+    addTimer(`${duration}秒`, duration);
+  };
+
+  // 添加自定义时间
+  const addCustomTimer = () => {
+    addTimer(customName, customTime);
+    setCustomName("");
+    setCustomTime(60);
   };
 
   // 移除计时器
@@ -82,31 +113,63 @@ const TimerPage: React.FC = () => {
     setSoundEnabled(!soundEnabled);
     message.success(`提示音已${soundEnabled ? "禁用" : "启用"}`);
   };
+  const customizePart = (
+    <div>
+      {/* 预设时间按钮 */}
+      <Space style={{ padding: "16px", width: "100%" }}>
+        {PRESET_TIMES.map((preset) => (
+          <Button
+            key={preset.value}
+            onClick={() => addPresetTimer(preset.value)}
+          >
+            {preset.label}
+          </Button>
+        ))}
+      </Space>
 
+      {/* 自定义时间输入 */}
+      <Space style={{ padding: "0 16px 16px", width: "100%" }}>
+        <Input
+          placeholder="定时器名称(可选)"
+          value={customName}
+          onChange={(e) => setCustomName(e.target.value)}
+          style={{ width: 200 }}
+        />
+        <InputNumber
+          min={1}
+          max={9999999999999}
+          value={customTime}
+          onChange={(value) => setCustomTime(value || 60)}
+          addonAfter="秒"
+        />
+        <Button type="primary" onClick={addCustomTimer} icon={<span>+</span>}>
+          添加
+        </Button>
+      </Space>
+    </div>
+  );
+  const settingPart = (
+    <div
+      style={{
+        padding: "8px 16px",
+      }}
+    >
+      <Space>
+        <Button danger onClick={clearAllTimers}>
+          全部清除
+        </Button>
+        <Button onClick={clearCompletedTimers}>清除已完成</Button>
+        <Button onClick={sortByName}>
+          按菜名{sortAscending ? "正序" : "倒序"}排序
+        </Button>
+        <Button onClick={toggleSound}>
+          {soundEnabled ? "禁用提示音" : "启用提示音"}
+        </Button>
+      </Space>
+    </div>
+  );
   return (
     <div style={{ display: "flex", height: "100vh", flexDirection: "column" }}>
-      {/* 顶部操作栏 */}
-      <div
-        style={{
-          padding: "8px 16px",
-          background: "#f0f0f0",
-          borderBottom: "1px solid #d9d9d9",
-        }}
-      >
-        <Space>
-          <Button danger onClick={clearAllTimers}>
-            全部清除
-          </Button>
-          <Button onClick={clearCompletedTimers}>清除已完成</Button>
-          <Button onClick={sortByName}>
-            按菜名{sortAscending ? "正序" : "倒序"}排序
-          </Button>
-          <Button onClick={toggleSound}>
-            {soundEnabled ? "禁用提示音" : "启用提示音"}
-          </Button>
-        </Space>
-      </div>
-
       <div style={{ display: "flex", flex: 1 }}>
         {/* 左侧食材列表 */}
         <div
@@ -119,6 +182,7 @@ const TimerPage: React.FC = () => {
             gap: "12px",
           }}
         >
+          {customizePart}
           {Object.entries(hotpotData).map(([category, items]) => (
             <div key={category}>
               <h3 style={{ margin: "8px 0" }}>{getCategoryName(category)}</h3>
@@ -180,6 +244,8 @@ const TimerPage: React.FC = () => {
             overflow: "auto",
           }}
         >
+          {settingPart}
+
           {activeTimers.map((timer) => (
             <div key={timer.id} style={{ width: "100%" }}>
               <AnimatedTimerBar
