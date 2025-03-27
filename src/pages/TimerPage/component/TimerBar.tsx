@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Progress, message } from "antd";
+import { Progress, message, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 interface TimerBarProps {
   name: string; // 定时器名称
   duration: number; // 总时长(秒)
+  onRemove?: () => void; // 移除回调函数
 }
 
-const TimerBar: React.FC<TimerBarProps> = ({ name, duration }) => {
+const TimerBar: React.FC<TimerBarProps> = ({ name, duration, onRemove }) => {
   const [remaining, setRemaining] = useState(duration);
   const [percent, setPercent] = useState(100);
   const startTimeRef = useRef<number>(0);
@@ -29,10 +31,9 @@ const TimerBar: React.FC<TimerBarProps> = ({ name, duration }) => {
         return;
       }
 
-      // 计算下一帧执行时间，保持1秒间隔
-      const nextTick = Math.max(0, 1000 - (now % 1000));
+      // 提高刷新频率到250ms(1秒4次)
       animationRef.current = requestAnimationFrame(() =>
-        setTimeout(updateTimer, nextTick),
+        setTimeout(updateTimer, 250),
       );
     };
 
@@ -51,16 +52,62 @@ const TimerBar: React.FC<TimerBarProps> = ({ name, duration }) => {
   };
 
   return (
-    <div style={{ width: "100%", textAlign: "center" }}>
+    <div
+      style={{
+        width: "100%",
+        padding: "0 16px",
+        position: "relative",
+        height: 48, // 固定高度以容纳重叠元素
+      }}
+    >
+      {/* 进度条作为底层 */}
       <Progress
-        type="circle"
+        type="line"
         percent={percent}
-        format={() => (
-          <div>
-            <div style={{ fontSize: 16, marginBottom: 8 }}>{name}</div>
-            <div style={{ fontSize: 24 }}>{formatTime(remaining)}</div>
-          </div>
-        )}
+        strokeColor="#69b1ff"
+        strokeWidth={48}
+        showInfo={false}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 16,
+          right: 16,
+          margin: 0,
+        }}
+      />
+
+      {/* 名称和时间作为上层 */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1,
+        }}
+      >
+        <div style={{ fontSize: 16 }}>
+          {name} {formatTime(remaining)}
+        </div>
+      </div>
+
+      {/* 移除按钮 */}
+      <Button
+        type="text"
+        icon={<CloseOutlined />}
+        size="small"
+        style={{
+          position: "absolute",
+          right: 16,
+          top: 12,
+          zIndex: 2,
+          fontSize: 12,
+        }}
+        onClick={onRemove}
       />
     </div>
   );

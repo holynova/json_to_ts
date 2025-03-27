@@ -50,7 +50,7 @@ const TimerPage: React.FC = () => {
               {items.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => addTimer(item.name, item.time)}
+                  onClick={() => addTimer(item.emoji + item.name, item.time)}
                   style={{
                     padding: "6px",
                     display: "flex",
@@ -99,9 +99,13 @@ const TimerPage: React.FC = () => {
         }}
       >
         {activeTimers.map((timer) => (
-          <div key={timer.id} style={{ width: "200px" }}>
-            <TimerBar name={timer.name} duration={timer.duration} />
-            <button
+          <div key={timer.id} style={{ width: "100%" }}>
+            <TimerBar
+              name={timer.name}
+              duration={timer.duration}
+              onRemove={() => removeTimer(timer.id)}
+            />
+            {/* <button
               onClick={() => removeTimer(timer.id)}
               style={{
                 marginTop: "8px",
@@ -115,7 +119,7 @@ const TimerPage: React.FC = () => {
               }}
             >
               移除
-            </button>
+            </button> */}
           </div>
         ))}
       </div>
