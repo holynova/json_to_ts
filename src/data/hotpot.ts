@@ -119,11 +119,24 @@ export const hotpotData = {
   ],
   vegetables: [
     {
-      name: "叶菜类（如菠菜、白菜）",
+      name: "叶菜",
       time: 20,
       desc: "煮至软化",
       emoji: "🥬",
     },
+    {
+      name: "白菜",
+      time: 20,
+      desc: "煮至软化",
+      emoji: "🥬",
+    },
+    {
+      name: "菠菜",
+      time: 20,
+      desc: "煮至软化",
+      emoji: "🥬",
+    },
+
     {
       name: "蘑菇",
       time: 90,
