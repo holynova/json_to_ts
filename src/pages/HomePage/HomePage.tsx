@@ -141,6 +141,7 @@ const HomePage: React.FC<Props> = (props: Props) => {
     <div className="output">
       <h3>TypeScript</h3>
       <CodeBox
+        isDark={true}
         data={addExportPrefix(outputStr)}
         language="typescript"
         downloadFileName="index.d.ts"

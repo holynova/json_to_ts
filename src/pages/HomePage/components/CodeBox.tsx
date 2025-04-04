@@ -2,7 +2,10 @@ import React from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 // import {} from "antd";
 import "./CodeBox.scss";
-import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import {
+  a11yDark,
+  a11yLight,
+} from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import CopyBox from "../../../common/components/CopyBox";
 import CodeDownloader from "../../../common/components/CodeDownloader";
@@ -14,6 +17,7 @@ interface Props {
   language?: string;
   showLineNumber?: boolean;
   downloadFileName?: string;
+  isDark?: boolean;
 }
 
 const CodeBox: React.FC<Props> = (props: Props) => {
@@ -38,7 +42,7 @@ const CodeBox: React.FC<Props> = (props: Props) => {
         {props?.language ? (
           <SyntaxHighlighter
             language={props?.language}
-            style={theme}
+            style={props.isDark ? a11yDark : a11yLight}
             showLineNumbers={!!props?.showLineNumber}
             customStyle={{
               fontSize: "14px",

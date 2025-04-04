@@ -8,6 +8,9 @@ import CopyBox from "../../common/components/CopyBox";
 import jsonToTs from "json-to-ts";
 import "./JsonFormatPage.less"; // 修复样式文件路径
 import MockDataBox from "../HomePage/components/MockDataBox";
+import { mainCode, utilCode } from "../HomePage/template";
+import CodeDownloader from "../../common/components/CodeDownloader";
+import CodeBox from "../HomePage/components/CodeBox";
 
 interface JsonData {
   [key: string]: any;
@@ -17,6 +20,13 @@ type FormatState =
   | "correct"
   | "errorButCorrected"
   | "errorAndNotCorrected";
+
+function addExportPrefix(str: string) {
+  if (typeof str === "string") {
+    return str.replaceAll(/interface/g, "export interface");
+  }
+  return "";
+}
 
 const { TabPane } = Tabs;
 const mock1 = `{"name": "Alice", "age": 25, "data": {"score": 90, "active": true}}`;
@@ -119,10 +129,16 @@ const JsonFormatPage = () => {
 
   const renderTypesTab = () => (
     <>
-      <CopyBox text={typeDefinitions}>
+      {/* <CopyBox text={typeDefinitions}>
         <Button>复制TypeScript定义</Button>
-      </CopyBox>
-      <pre>{typeDefinitions}</pre>
+      </CopyBox> */}
+      {/* <pre>{typeDefinitions}</pre> */}
+      <CodeBox
+        data={addExportPrefix(typeDefinitions)}
+        isDark={false}
+        language="typescript"
+        downloadFileName="index.d.ts"
+      ></CodeBox>
     </>
   );
 
@@ -158,6 +174,23 @@ const JsonFormatPage = () => {
           </TabPane>
           <TabPane tab="mock数据" key="4">
             {renderMockTab()}
+          </TabPane>
+          <TabPane tab="mock生成器" key="5">
+            <CodeBox
+              data={mainCode}
+              language="typescript"
+              downloadFileName="main.ts"
+            ></CodeBox>
+            <CodeBox
+              data={utilCode}
+              language="typescript"
+              downloadFileName="convert.ts"
+            ></CodeBox>
+            {/* <CodeDownloader data={mainCode} fileName="main.ts"></CodeDownloader>
+            <CodeDownloader
+              data={utilCode}
+              fileName="convert.ts"
+            ></CodeDownloader> */}
           </TabPane>
         </Tabs>
       </div>
