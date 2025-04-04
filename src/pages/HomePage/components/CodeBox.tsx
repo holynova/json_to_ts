@@ -6,6 +6,7 @@ import { a11yDark as theme } from "react-syntax-highlighter/dist/esm/styles/hljs
 
 import CopyBox from "../../../common/components/CopyBox";
 import CodeDownloader from "../../../common/components/CodeDownloader";
+import { Button } from "antd";
 
 // import  {log} from ''
 interface Props {
@@ -26,7 +27,7 @@ const CodeBox: React.FC<Props> = (props: Props) => {
     <div className="CodeBox">
       <div className="button-part">
         <CopyBox text={output}>
-          <div className="btn">复制</div>
+          <Button type="link">复制</Button>
         </CopyBox>
         <CodeDownloader
           data={output}

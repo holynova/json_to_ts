@@ -149,7 +149,14 @@ const HomePage: React.FC<Props> = (props: Props) => {
   );
 
   const mockDataPart = (
-    <MockDataBox error={error} data={inputData?.jsObject}></MockDataBox>
+    <div>
+      <h3>mock数据</h3>
+      <MockDataBox
+        error={error}
+        language="json"
+        data={inputData?.jsObject}
+      ></MockDataBox>
+    </div>
   );
 
   const downloadPart = (

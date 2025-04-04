@@ -7,12 +7,14 @@ import React, {
 } from "react";
 import { Converter } from "../../../utils/convert";
 import CodeBox from "./CodeBox";
+import { Button } from "antd";
 // import {} from "antd";
 // import './MockDataBox.less'
 // import  {log} from ''
 interface Props {
   data: any;
   error?: string;
+  language?: string;
 }
 
 const converter = new Converter({});
@@ -31,16 +33,15 @@ const MockDataBox: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="MockDataBox">
-      <h3>mock数据</h3>
       <div className="button-part">
-        <div className="btn" onClick={refresh}>
+        <Button type="link" onClick={refresh}>
           重新生成
-        </div>
+        </Button>
       </div>
 
       <CodeBox
         data={props.error || output}
-        language="typescript"
+        language={props?.language}
         downloadFileName="mockData.json"
       ></CodeBox>
     </div>

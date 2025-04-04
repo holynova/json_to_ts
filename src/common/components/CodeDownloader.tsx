@@ -6,6 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import download from "downloadjs";
+import { Button } from "antd";
 // import {} from "antd";
 // import './CodeDownloader.less'
 // import  {log} from ''
@@ -28,9 +29,9 @@ const CodeDownloader: React.FC<Props> = (props: Props) => {
   return (
     <div className="CodeDownloader">
       {/* <h3>CodeDownloader</h3> */}
-      <div className="btn" onClick={startDownload}>
+      <Button type="link" onClick={startDownload}>
         {`${props?.prefix || "下载"} ${props?.fileName || "文件"}`}
-      </div>
+      </Button>
     </div>
   );
 };

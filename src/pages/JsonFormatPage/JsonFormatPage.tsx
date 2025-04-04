@@ -1,12 +1,13 @@
-import React, { useState, ChangeEvent, useMemo } from "react";
+import React, { useState, ChangeEvent, useMemo, useEffect } from "react";
 import JSON5 from "json5";
 import { jsonrepair } from "jsonrepair";
 import ReactJson from "react-json-view";
 import SplitPane from "react-split-pane";
-import { Tabs } from "antd";
+import { Button, Space, Tabs } from "antd";
 import CopyBox from "../../common/components/CopyBox";
 import jsonToTs from "json-to-ts";
 import "./JsonFormatPage.less"; // 修复样式文件路径
+import MockDataBox from "../HomePage/components/MockDataBox";
 
 interface JsonData {
   [key: string]: any;
@@ -25,8 +26,8 @@ const JsonFormatPage = () => {
   const [json, setJson] = useState<JsonData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [state, setState] = useState<FormatState>("initial");
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const userInput = e.target.value;
+
+  const handleInputChange = (userInput: string) => {
     setInput(userInput);
 
     try {
@@ -54,6 +55,9 @@ const JsonFormatPage = () => {
       }
     }
   };
+  useEffect(() => {
+    handleInputChange(input);
+  }, []);
 
   const jsonString = useMemo(
     () => (json ? JSON.stringify(json, null, 2) : ""),
@@ -68,57 +72,75 @@ const JsonFormatPage = () => {
     [json],
   );
 
-  const renderJsonTab = () => (
-    <>
-      <div className={`state-indicator ${state}`}>
-        <span className="status-light"></span>
-        <span className="status-text">
-          {state === "correct" && "原JSON 格式正确"}
-          {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
-          {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
-        </span>
-      </div>
-      {error ? (
-        <p className="error-message">{error}</p>
-      ) : (
-        json && (
-          <>
-            <CopyBox text={jsonString} />
-            <ReactJson
-              style={{ padding: "10px", backgroundColor: "white" }}
-              src={json}
-              displayObjectSize={false}
-              displayDataTypes={false}
-              theme={"rjv-default"}
-              collapsed={false}
-            />
-          </>
-        )
-      )}
-    </>
-  );
+  const renderJsonTab = () => {
+    return (
+      <>
+        <Space>
+          <div className={`state-indicator ${state}`}>
+            <span className="status-light"></span>
+            <span className="status-text">
+              {state === "correct" && "原JSON 格式正确"}
+              {state === "errorButCorrected" && "原JSON 格式错误，已修复"}
+              {state === "errorAndNotCorrected" && "原JSON 格式错误，无法修复"}
+            </span>
+          </div>
+        </Space>
+        {error ? (
+          <p className="error-message">{error}</p>
+        ) : (
+          json && (
+            <>
+              <CopyBox text={jsonString}>
+                <Button>复制json</Button>
+              </CopyBox>
+              <ReactJson
+                style={{ padding: "10px", backgroundColor: "white" }}
+                src={json}
+                displayObjectSize={false}
+                displayDataTypes={false}
+                theme={"rjv-default"}
+                collapsed={false}
+              />
+            </>
+          )
+        )}
+      </>
+    );
+  };
 
   const renderCompressedTab = () => (
     <>
-      <CopyBox text={compressedJson} />
+      <CopyBox text={compressedJson}>
+        <Button>复制压缩后json</Button>
+      </CopyBox>
       <pre>{compressedJson}</pre>
     </>
   );
 
   const renderTypesTab = () => (
     <>
-      <CopyBox text={typeDefinitions} />
+      <CopyBox text={typeDefinitions}>
+        <Button>复制TypeScript定义</Button>
+      </CopyBox>
       <pre>{typeDefinitions}</pre>
     </>
   );
 
+  const renderMockTab = () => {
+    const error = "";
+    return (
+      <>
+        <MockDataBox error={error} data={json} />
+      </>
+    );
+  };
   return (
     <SplitPane split="vertical" defaultSize="50%">
       <div className="input-section">
         <h3>输入 JSON 字符串</h3>
         <textarea
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => handleInputChange(e.target.value)}
           className="input-textarea"
           placeholder="在此输入 JSON 字符串..."
         />
@@ -133,6 +155,9 @@ const JsonFormatPage = () => {
           </TabPane>
           <TabPane tab="TS类型" key="3">
             {renderTypesTab()}
+          </TabPane>
+          <TabPane tab="mock数据" key="4">
+            {renderMockTab()}
           </TabPane>
         </Tabs>
       </div>
