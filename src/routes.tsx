@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import MainPage from "./pages/MainPage/MainPage";
 import JsonFormatPage from "./pages/JsonFormatPage/JsonFormatPage";
 import TimerPage from "./pages/TimerPage/TimerPage";
+import NamerPage from "./pages/NamerPage/NamerPage";
 
 const routes = [
   {
@@ -40,6 +41,11 @@ const routes = [
     name: "火锅定时器Timer",
     path: "/timer",
     element: <TimerPage />,
+  },
+  {
+    name: "古诗词起名",
+    path: "/namer",
+    element: <NamerPage />,
   },
   {
     path: "/",
