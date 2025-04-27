@@ -31,6 +31,10 @@ const NamerPage: React.FC<Props> = (props) => {
   }, []);
 
   const search = useCallback((key: string) => {
+    if (key.trim() === "") {
+      setResultList([]);
+      return;
+    }
     const MAX_RESULTS = 100;
     const results = poemList.filter((poem) => {
       return poem.content.includes(key);
