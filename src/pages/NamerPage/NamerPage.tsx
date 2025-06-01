@@ -39,6 +39,7 @@ const NamerPage: React.FC<Props> = (props) => {
     const results = poemList.filter((poem) => {
       return poem.content.includes(key);
     });
+
     if (results.length > MAX_RESULTS) {
       // randomly select 100 results
       const randomIndices = new Set<number>();
@@ -55,7 +56,7 @@ const NamerPage: React.FC<Props> = (props) => {
 
   return (
     <div className="NamerPage">
-      <h1>搜古诗</h1>
+      <h1>古诗起名</h1>
       <Input
         value={keyword}
         placeholder="请输入"

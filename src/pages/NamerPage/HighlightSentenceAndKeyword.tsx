@@ -23,9 +23,19 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
   sentenceStyle,
   keywordStyle,
 }) => {
+  const [hoveredNote, setHoveredNote] = useState<string | null>(null);
+
   const highlightedContent = useMemo(() => {
     // Split the text into sentences using punctuation marks
-    const sentences = text.split(/(?<!\w)([。！？；])/g).filter(Boolean);
+    const sentences = text
+      .split(/([。！？；])/g)
+      .reduce((acc, curr, i, arr) => {
+        if (i % 2 === 0) {
+          acc.push(curr + (arr[i + 1] || ""));
+        }
+        return acc;
+      }, [] as string[])
+      .filter(Boolean);
 
     // Find the sentence containing the keyword
     const targetSentenceIndex = sentences.findIndex((sentence) =>
@@ -33,17 +43,55 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
     );
 
     if (targetSentenceIndex === -1) {
-      return text; // Return the original text if the keyword is not found
+      return text;
     }
 
     const targetSentence = sentences[targetSentenceIndex];
+
+    // Process each sentence to handle parentheses content
+    const processSentence = (sentence: string, index: number) => {
+      // 检查句子是否包含注释（包括中文括号和英文括号）
+      const noteMatch = sentence.match(/[（(]([^）)]*)[）)]/);
+      const note = noteMatch ? noteMatch[1] : null;
+      // 删除所有括号内容（包括中文括号和英文括号）
+      const sentenceWithoutNote = sentence.replace(/[（(][^）)]*[）)]/g, "");
+
+      return (
+        <span
+          key={index}
+          onMouseEnter={() => note && setHoveredNote(note)}
+          onMouseLeave={() => setHoveredNote(null)}
+          style={{ position: "relative", display: "inline-block" }}
+        >
+          {sentenceWithoutNote}
+          {hoveredNote === note && note && (
+            <span
+              style={{
+                position: "absolute",
+                top: "-25px",
+                left: "0",
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                color: "white",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                fontSize: "14px",
+                zIndex: 1000,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {note}
+            </span>
+          )}
+        </span>
+      );
+    };
 
     // Highlight the keyword within the target sentence
     const highlightedSentence = targetSentence
       .split(keyword)
       .map((part, index) => (
         <React.Fragment key={index}>
-          {part}
+          {processSentence(part, index)}
           {index < targetSentence.split(keyword).length - 1 && (
             <span style={keywordStyle}>{keyword}</span>
           )}
@@ -53,19 +101,26 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
     // Reconstruct the text with the highlighted sentence
     return (
       <>
-        {sentences.map((sentence, index) => {
-          if (index === targetSentenceIndex) {
-            return (
-              <span key={index} style={sentenceStyle}>
-                {highlightedSentence}
-              </span>
-            );
-          }
-          return <span key={index}>{sentence}</span>;
-        })}
+        {sentences
+          .map((sentence, index) => {
+            if (index === targetSentenceIndex) {
+              return (
+                <span key={index} style={sentenceStyle}>
+                  {highlightedSentence}
+                </span>
+              );
+            }
+            return processSentence(sentence, index);
+          })
+          .map((element, index) => (
+            <React.Fragment key={index}>
+              {element}
+              {index < sentences.length - 1 && <br />}
+            </React.Fragment>
+          ))}
       </>
     );
-  }, [text, keyword, sentenceStyle, keywordStyle]);
+  }, [text, keyword, sentenceStyle, keywordStyle, hoveredNote]);
 
   return (
     <div className="HighlightSentenceAndKeyword">{highlightedContent}</div>
