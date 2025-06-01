@@ -7,7 +7,7 @@ import React, {
 } from "react";
 interface Props {
   text: string;
-  keyword: string;
+  keywords: string[];
   sentenceStyle?: React.CSSProperties;
   keywordStyle?: React.CSSProperties;
 }
@@ -19,7 +19,7 @@ interface Props {
 
 const HighlightSentenceAndKeyword: React.FC<Props> = ({
   text,
-  keyword,
+  keywords,
   sentenceStyle,
   keywordStyle,
 }) => {
@@ -37,16 +37,15 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
       }, [] as string[])
       .filter(Boolean);
 
-    // Find the sentence containing the keyword
-    const targetSentenceIndex = sentences.findIndex((sentence) =>
-      sentence.includes(keyword),
-    );
+    // 找到所有包含关键词的句子
+    const targetSentenceIndices = sentences
+      .map((sentence, index) => ({ sentence, index }))
+      .filter(({ sentence }) => keywords.some((k) => sentence.includes(k)))
+      .map(({ index }) => index);
 
-    if (targetSentenceIndex === -1) {
+    if (targetSentenceIndices.length === 0) {
       return text;
     }
-
-    const targetSentence = sentences[targetSentenceIndex];
 
     // Process each sentence to handle parentheses content
     const processSentence = (sentence: string, index: number) => {
@@ -86,24 +85,28 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
       );
     };
 
-    // Highlight the keyword within the target sentence
-    const highlightedSentence = targetSentence
-      .split(keyword)
-      .map((part, index) => (
-        <React.Fragment key={index}>
-          {processSentence(part, index)}
-          {index < targetSentence.split(keyword).length - 1 && (
-            <span style={keywordStyle}>{keyword}</span>
-          )}
-        </React.Fragment>
-      ));
+    // 创建一个正则表达式来匹配所有关键词
+    const keywordRegex = new RegExp(`(${keywords.join("|")})`, "g");
 
-    // Reconstruct the text with the highlighted sentence
+    // Reconstruct the text with all highlighted sentences
     return (
       <>
         {sentences
           .map((sentence, index) => {
-            if (index === targetSentenceIndex) {
+            if (targetSentenceIndices.includes(index)) {
+              // 使用正则表达式分割文本并高亮关键词
+              const parts = sentence.split(keywordRegex);
+              const highlightedSentence = parts.map((part, partIndex) => {
+                if (keywords.includes(part)) {
+                  return (
+                    <span key={partIndex} style={keywordStyle}>
+                      {part}
+                    </span>
+                  );
+                }
+                return processSentence(part, partIndex);
+              });
+
               return (
                 <span key={index} style={sentenceStyle}>
                   {highlightedSentence}
@@ -120,7 +123,7 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
           ))}
       </>
     );
-  }, [text, keyword, sentenceStyle, keywordStyle, hoveredNote]);
+  }, [text, keywords, sentenceStyle, keywordStyle, hoveredNote]);
 
   return (
     <div className="HighlightSentenceAndKeyword">{highlightedContent}</div>

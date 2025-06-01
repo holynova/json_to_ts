@@ -24,7 +24,7 @@ const poemList: Poem[] = Object.values(poemDict);
 
 const NamerPage: React.FC<Props> = (props) => {
   // const [loading, setLoading] = useState(false)
-  const [keyword, setKeyword] = useState("风");
+  const [keyword, setKeyword] = useState("春 风");
   const [resultList, setResultList] = useState<Poem[]>([]);
   useEffect(() => {
     search(keyword);
@@ -37,7 +37,9 @@ const NamerPage: React.FC<Props> = (props) => {
     }
     const MAX_RESULTS = 100;
     const results = poemList.filter((poem) => {
-      return poem.content.includes(key);
+      // key是用空格分割的, 则需要判断诗句中是否包含所有关键词
+      const keywords = key.split(/[\s,]+/).filter((k) => k.trim() !== "");
+      return keywords.every((k) => poem.content.includes(k));
     });
 
     if (results.length > MAX_RESULTS) {
@@ -76,28 +78,31 @@ const NamerPage: React.FC<Props> = (props) => {
         {resultList.map((poem, index) => {
           return (
             <div key={index} className="poem">
+              <div className="poem-title">
+                <div>
+                  <span>{poem.title}</span>
+                </div>
+                <span>{poem.dynasty}</span>
+                <span>{poem.author}</span>
+                <span>{poem.book}</span>
+              </div>
               <HighlightSentenceAndKeyword
                 text={poem.content}
-                keyword={keyword}
+                keywords={keyword
+                  .split(/[\s,]+/)
+                  .filter((k) => k.trim() !== "")}
                 sentenceStyle={{
                   // backgroundColor: "pink",
                   // fontSize: "1.2em",
-                  fontWeight: "bold",
+                  // fontWeight: "bold",
+                  color: "black",
                 }}
                 keywordStyle={{
-                  // color: "red",
-                  // backgroundColor: "lightblue",
-                  fontSize: "1.4em",
+                  // fontSize: "1.4em",
                   fontWeight: "bold",
-                  padding: "0 0.1em",
+                  // padding: "0 0.1em",
                 }}
               />
-              <div className="poem-title">
-                <span>{poem.dynasty}</span>
-                <span>{poem.author}</span>
-                <span>{poem.title}</span>
-                <span>{poem.book}</span>
-              </div>
             </div>
           );
         })}
