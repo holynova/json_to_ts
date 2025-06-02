@@ -5,11 +5,13 @@ import { ICalculateResult } from "easy-salary";
 interface SalaryResultDisplayProps {
   data: ICalculateResult;
   compact?: boolean; // true为单行模式，false为多行模式
+  showChart?: boolean; // 是否显示工资构成比例图
 }
 
 export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
   data,
   compact = false,
+  showChart = true,
 }) => {
   const [expandedPersonal, setExpandedPersonal] = useState(false);
   const [expandedCompany, setExpandedCompany] = useState(false);
@@ -20,6 +22,12 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
+  };
+
+  // 计算平均值工具函数
+  const getAvg = (arr: number[] | undefined): number => {
+    if (!arr || arr.length === 0) return 0;
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
   };
 
   // 保险和公积金详情组件
@@ -50,6 +58,65 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
     </div>
   );
 
+  // 工资构成比例图组件
+  const SalaryCompositionChart = ({ data }: { data: ICalculateResult }) => {
+    const total = data.salaryBase;
+    const afterTax = data.salaryAfterTaxAvg;
+    const tax = getAvg(data.salaryTax);
+    const housingFund = data.insuranceAndFund?.housingFund || 0;
+    const insurance = (data.insuranceAndFund?.totalFund || 0) - housingFund;
+
+    const getPercentage = (value: number) => (value / total) * 100;
+
+    return (
+      <div className="mt-4">
+        <div className="text-sm font-medium text-gray-700 mb-2">
+          工资构成比例
+        </div>
+        <div className="h-6 bg-gray-100 rounded-full overflow-hidden flex">
+          <div
+            className="bg-green-500"
+            style={{ width: `${getPercentage(afterTax)}%` }}
+            title={`税后工资: ${formatMoney(afterTax)}`}
+          />
+          <div
+            className="bg-red-500"
+            style={{ width: `${getPercentage(tax)}%` }}
+            title={`个人所得税: ${formatMoney(tax)}`}
+          />
+          <div
+            className="bg-blue-500"
+            style={{ width: `${getPercentage(housingFund)}%` }}
+            title={`公积金: ${formatMoney(housingFund)}`}
+          />
+          <div
+            className="bg-yellow-500"
+            style={{ width: `${getPercentage(insurance)}%` }}
+            title={`保险: ${formatMoney(insurance)}`}
+          />
+        </div>
+        <div className="flex gap-4 mt-2 text-xs text-gray-600">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <span>税后工资</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-red-500 rounded"></div>
+            <span>个人所得税</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-blue-500 rounded"></div>
+            <span>公积金</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+            <span>保险</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (compact) {
     // 紧凑单行模式
     return (
@@ -66,6 +133,13 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
             <span className="text-gray-600">平均税后:</span>
             <span className="font-semibold text-blue-600">
               {formatMoney(data.salaryAfterTaxAvg)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">个人所得税:</span>
+            <span className="font-semibold text-red-600">
+              {formatMoney(getAvg(data.salaryTax))}
             </span>
           </div>
 
@@ -103,6 +177,8 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
           </div>
         </div>
 
+        {showChart && <SalaryCompositionChart data={data} />}
+
         {/* 展开的详情 */}
         {expandedPersonal && (
           <InsuranceDetails data={data.insuranceAndFund} title="个人承担部分" />
@@ -121,7 +197,7 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
   return (
     <div className="bg-white border rounded-lg p-6 shadow-sm space-y-4">
       {/* 基础信息 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-green-50 p-4 rounded-lg">
           <div className="text-sm text-gray-600 mb-1">基础工资</div>
           <div className="text-2xl font-bold text-green-600">
@@ -134,7 +210,15 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
             {formatMoney(data.salaryAfterTaxAvg)}
           </div>
         </div>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <div className="text-sm text-gray-600 mb-1">个人所得税</div>
+          <div className="text-2xl font-bold text-red-600">
+            {formatMoney(getAvg(data.salaryTax))}
+          </div>
+        </div>
       </div>
+
+      {showChart && <SalaryCompositionChart data={data} />}
 
       {/* 五险一金部分 */}
       <div className="space-y-3">
@@ -211,6 +295,10 @@ const SalaryDemo = () => {
   const sampleData: ICalculateResult = {
     salaryBase: 20000,
     salaryAfterTaxAvg: 16500.5,
+    salaryPreTax: [20000],
+    salaryAfterTax: [16500.5],
+    salaryTax: [1500.0],
+    salaryTotalTax: 1500.0,
     insuranceAndFund: {
       pension: 1600.0,
       medicalInsurance: 200.0,
@@ -233,6 +321,12 @@ const SalaryDemo = () => {
       totalFund: 8060.0,
       totalHousingFund: 2400.0,
     },
+    totalSalaryAfterTaxExcludeAwards: 198006,
+    totalSalaryPreTax: 240000,
+    totalSalaryAfterTax: 198006,
+    awardsPreTax: 0,
+    awardsAfterTax: 0,
+    awardsTax: 0,
   };
 
   return (

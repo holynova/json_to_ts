@@ -51,10 +51,20 @@ export const SalaryComparisonTable: React.FC = () => {
       <div className="space-y-4">
         {activeTab === 0
           ? resultList.map((x, index) => (
-              <SalaryResultDisplay key={index} data={x} compact />
+              <SalaryResultDisplay
+                key={index}
+                data={x}
+                compact
+                showChart={false}
+              />
             ))
           : supplementaryFundResultList.map((x, index) => (
-              <SalaryResultDisplay key={index} data={x} compact />
+              <SalaryResultDisplay
+                key={index}
+                data={x}
+                compact
+                showChart={false}
+              />
             ))}
       </div>
     </div>
