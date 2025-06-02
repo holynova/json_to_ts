@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { getResult, getBeforeTextSalary } from "../salaryUtils";
 import { SalaryResultDisplay } from "./SalaryResultDisplay";
 
 export const AfterTaxCalculator: React.FC = () => {
-  const [afterTaxSalary, setAfterTaxSalary] = useState<number>(0);
+  const [afterTaxSalary, setAfterTaxSalary] = useState<number>(10000);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
@@ -28,6 +33,7 @@ export const AfterTaxCalculator: React.FC = () => {
           输入税后工资
         </label>
         <input
+          ref={inputRef}
           type="number"
           value={afterTaxSalary || ""}
           onChange={handleInputChange}
