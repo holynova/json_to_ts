@@ -1,51 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import routes from "../../routes";
-import "antd/dist/reset.css";
-import "./MainPage.less";
-import { Switch } from "antd";
-
-interface RouteItem {
-  path: string;
-  name: string;
-  description?: string;
-}
 
 const MainPage: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const navRoutes = routes.filter((route) => route.path !== "/") as RouteItem[];
-
-  const toggleDarkMode = (checked: boolean) => {
-    setIsDarkMode(checked);
-  };
-
   return (
-    <div className={`MainPage ${isDarkMode ? "dark" : ""}`}>
-      <div style={{ position: "absolute", top: 24, right: 24 }}>
-        <Switch
-          checkedChildren="🌙"
-          unCheckedChildren="☀️"
-          checked={isDarkMode}
-          onChange={toggleDarkMode}
-        />
-      </div>
-
-      <div className="header">
-        <h1>JSON to TypeScript</h1>
-        <div className="description">
-          Convert JSON to TypeScript interfaces with ease
-        </div>
-      </div>
-
-      <div className="nav-grid">
-        {navRoutes.map((route) => (
-          <Link to={route.path} key={route.path} className="nav-card">
-            <div className="title">{route.name}</div>
-            {route.description && (
-              <div className="description">{route.description}</div>
-            )}
-          </Link>
-        ))}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {routes
+          .filter((route) => route.name)
+          .map((route) => (
+            <Link
+              key={route.path}
+              to={route.path || "/"}
+              className="block p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200"
+            >
+              <h2 className="text-xl font-semibold text-gray-900">
+                {route.name}
+              </h2>
+            </Link>
+          ))}
       </div>
     </div>
   );

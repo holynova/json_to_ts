@@ -1,25 +1,26 @@
 import React from "react";
-import { Toaster } from "react-hot-toast";
-//  import {} from 'antd'
-// import './App.less'
-// import  {log} from ''
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Header } from "./components/Header/Header";
 import routes from "./routes";
 
-interface Props {}
-
-const router = createBrowserRouter(routes);
-
-const App: React.FC<Props> = (props) => {
-  // const [loading, setLoading] = useState(false)r
+const App = () => {
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-      <Toaster></Toaster>
-      {/* <HomePage></HomePage> */}
-      {/* <CombinationPage /> */}
-      {/* <DemoPage></DemoPage> */}
-    </div>
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="pt-16 py-6">
+          <Routes>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 
