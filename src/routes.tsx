@@ -16,6 +16,7 @@ import JsonFormatPage from "./pages/JsonFormatPage/JsonFormatPage";
 import TimerPage from "./pages/TimerPage/TimerPage";
 import NamerPage from "./pages/NamerPage/NamerPage";
 import HolidayPage from "./pages/HolidayPage/HolidayPage";
+import { SalaryPage } from "./pages/SalaryPage/SalaryPage";
 
 const routes = [
   {
@@ -52,6 +53,11 @@ const routes = [
     name: "节假日日历",
     path: "/holiday",
     element: <HolidayPage />,
+  },
+  {
+    name: "倒推工资",
+    path: "/salary",
+    element: <SalaryPage />,
   },
   {
     path: "/",
