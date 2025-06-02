@@ -30,17 +30,17 @@ const routes = [
   //   element: <DemoPage />,
   // },
   {
-    name: "JavaScript to TypeScript",
+    name: "JavaScript转TypeScript",
     path: "/ts",
     element: <HomePage />,
   },
   {
-    name: "json format",
+    name: "json格式化",
     path: "/json",
     element: <JsonFormatPage />,
   },
   {
-    name: "火锅定时器Timer",
+    name: "火锅定时器",
     path: "/timer",
     element: <TimerPage />,
   },
@@ -50,7 +50,7 @@ const routes = [
     element: <NamerPage />,
   },
   {
-    name: "节假日日历",
+    name: "节假日可视化",
     path: "/holiday",
     element: <HolidayPage />,
   },
