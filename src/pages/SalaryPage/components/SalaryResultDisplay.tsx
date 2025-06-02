@@ -1,25 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-
-// 基础接口定义
-interface IInsuranceAndFundResult {
-  pension: number;
-  medicalInsurance: number;
-  unemploymentInsurance: number;
-  injuryInsurance: number;
-  maternityInsurance: number;
-  housingFund: number;
-  supplementaryFund: number;
-  totalFund: number;
-  totalHousingFund: number;
-}
-
-interface ICalculateResult {
-  salaryBase: number;
-  salaryAfterTaxAvg: number;
-  insuranceAndFund: IInsuranceAndFundResult;
-  insuranceAndFundOfCompany: IInsuranceAndFundResult;
-}
+import { ICalculateResult } from "easy-salary";
 
 interface SalaryResultDisplayProps {
   data: ICalculateResult;
@@ -46,7 +27,7 @@ export const SalaryResultDisplay: React.FC<SalaryResultDisplayProps> = ({
     data: fundData,
     title,
   }: {
-    data: IInsuranceAndFundResult;
+    data: ICalculateResult["insuranceAndFund"];
     title: string;
   }) => (
     <div className="ml-4 mt-2 space-y-1 text-sm text-gray-600">

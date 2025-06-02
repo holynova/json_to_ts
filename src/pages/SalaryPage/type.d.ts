@@ -1,3 +1,5 @@
+import { IInsuranceAndFund } from "easy-salary";
+
 // 传入的配置参数
 export interface Config {
   salary?: number; // 基础工资
@@ -11,18 +13,12 @@ export interface Config {
   extraBonus?: number | number[]; // 每月额外奖金
   housingFundRange?: IHousingFundRange; // 公积金计算上下限
 }
-export interface IInsuranceAndFund {
-  pension: number; // 养老保险
-  medicalInsurance: number; // 医疗保险
-  unemploymentInsurance: number; // 失业保险
-  injuryInsurance: number; // 工伤保险
-  maternityInsurance: number; // 生育保险
-  housingFund: number; // 住房公积金
-  supplementaryFund: number; // 补充住房公积金
-}
+
 export interface IHousingFundRange {
   min: number;
   max: number;
 }
+
+export type { IInsuranceAndFund };
 
 export interface Result {}
