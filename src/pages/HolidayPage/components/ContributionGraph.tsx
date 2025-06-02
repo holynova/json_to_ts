@@ -28,8 +28,12 @@ interface YearData {
   weeks: Date[][];
 }
 
-const ContributionGraph: React.FC = () => {
-  const [yearData, setYearData] = useState<YearData[]>([]);
+interface ContributionGraphProps {
+  year: number;
+}
+
+const ContributionGraph: React.FC<ContributionGraphProps> = ({ year }) => {
+  const [yearData, setYearData] = useState<YearData | null>(null);
   const [tooltip, setTooltip] = useState<{
     show: boolean;
     date: string;
@@ -43,55 +47,47 @@ const ContributionGraph: React.FC = () => {
   });
 
   useEffect(() => {
-    // 生成 2015-2025 年的年份数组（倒序）
-    const years = Array.from({ length: 11 }, (_, i) => 2025 - i);
+    const yearDate = new Date(year, 0, 1);
+    const yearStart = startOfYear(yearDate);
+    const yearEnd = endOfYear(yearDate);
 
-    // 为每一年生成按周排列的日期数组
-    const yearDataArray = years.map((year) => {
-      const yearDate = new Date(year, 0, 1);
-      const yearStart = startOfYear(yearDate);
-      const yearEnd = endOfYear(yearDate);
+    // 获取该年的第一周和最后一周
+    const firstWeekStart = startOfWeek(yearStart, { weekStartsOn: 1 });
+    const lastWeekEnd = endOfWeek(yearEnd, { weekStartsOn: 1 });
 
-      // 获取该年的第一周和最后一周
-      const firstWeekStart = startOfWeek(yearStart, { weekStartsOn: 1 });
-      const lastWeekEnd = endOfWeek(yearEnd, { weekStartsOn: 1 });
+    // 计算总周数
+    const totalWeeks = Math.ceil(
+      (lastWeekEnd.getTime() - firstWeekStart.getTime()) /
+        (7 * 24 * 60 * 60 * 1000),
+    );
 
-      // 计算总周数
-      const totalWeeks = Math.ceil(
-        (lastWeekEnd.getTime() - firstWeekStart.getTime()) /
-          (7 * 24 * 60 * 60 * 1000),
-      );
+    // 初始化周数组
+    const weeks: Date[][] = Array(totalWeeks)
+      .fill(null)
+      .map(() => Array(7).fill(null));
 
-      // 初始化周数组
-      const weeks: Date[][] = Array(totalWeeks)
-        .fill(null)
-        .map(() => Array(7).fill(null));
+    // 填充每一周的数据
+    let currentWeekStart = firstWeekStart;
+    for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
+      // 获取当前周的每一天
+      for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+        const currentDate = new Date(currentWeekStart);
+        currentDate.setDate(currentDate.getDate() + dayIndex);
 
-      // 填充每一周的数据
-      let currentWeekStart = firstWeekStart;
-      for (let weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
-        // 获取当前周的每一天
-        for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-          const currentDate = new Date(currentWeekStart);
-          currentDate.setDate(currentDate.getDate() + dayIndex);
-
-          // 只保留本年的日期
-          if (isSameYear(currentDate, yearDate)) {
-            weeks[weekIndex][dayIndex] = currentDate;
-          }
+        // 只保留本年的日期
+        if (isSameYear(currentDate, yearDate)) {
+          weeks[weekIndex][dayIndex] = currentDate;
         }
-        // 移动到下一周
-        currentWeekStart = addWeeks(currentWeekStart, 1);
       }
+      // 移动到下一周
+      currentWeekStart = addWeeks(currentWeekStart, 1);
+    }
 
-      return {
-        year,
-        weeks,
-      };
+    setYearData({
+      year,
+      weeks,
     });
-
-    setYearData(yearDataArray);
-  }, []);
+  }, [year]);
 
   const handleMouseEnter = (
     date: Date,
@@ -167,10 +163,13 @@ const ContributionGraph: React.FC = () => {
     );
   };
 
+  if (!yearData) {
+    return null;
+  }
+
   return (
     <div className="contribution-graph">
       <div className="contribution-graph__header">
-        <h2>贡献图</h2>
         <div className="contribution-graph__legend">
           <div className="contribution-graph__legend-item contribution-graph__legend-item--workday">
             工作日
@@ -186,15 +185,8 @@ const ContributionGraph: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="contribution-graph__years">
-        {yearData.map(({ year, weeks }) => (
-          <div key={year} className="contribution-graph__year">
-            <h3>{year}年</h3>
-            <div className="contribution-graph__grid">
-              {weeks.map((week, weekIndex) => renderWeek(week, weekIndex))}
-            </div>
-          </div>
-        ))}
+      <div className="contribution-graph__grid">
+        {yearData.weeks.map((week, weekIndex) => renderWeek(week, weekIndex))}
       </div>
       {tooltip.show && (
         <div
