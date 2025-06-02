@@ -47,11 +47,12 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center">
-            <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
+            <div
+              className="relative inline-block"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 More
                 <svg
                   className="ml-2 -mr-0.5 h-4 w-4"
@@ -68,7 +69,15 @@ export const Header: React.FC = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                <div
+                  className="absolute right-0 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+                  style={{
+                    top: "100%",
+                    marginTop: "-1px",
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                  }}
+                >
                   <div
                     className="py-1"
                     role="menu"
@@ -85,7 +94,6 @@ export const Header: React.FC = () => {
                             : "text-gray-700"
                         } block px-4 py-2 text-sm hover:bg-gray-100`}
                         role="menuitem"
-                        onClick={() => setIsDropdownOpen(false)}
                       >
                         {item.label}
                       </Link>
