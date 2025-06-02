@@ -86,7 +86,12 @@ const HighlightSentenceAndKeyword: React.FC<Props> = ({
     };
 
     // 创建一个正则表达式来匹配所有关键词
-    const keywordRegex = new RegExp(`(${keywords.join("|")})`, "g");
+    const keywordRegex = new RegExp(
+      `(${keywords
+        .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("|")})`,
+      "g",
+    );
 
     // Reconstruct the text with all highlighted sentences
     return (

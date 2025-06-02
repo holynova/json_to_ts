@@ -5,9 +5,9 @@ import {
   SmileOutlined,
   DislikeOutlined,
 } from "@ant-design/icons";
-import { poemDict } from "./poemDict";
+import { poemDict } from "../data/poemDict";
 import HighlightSentenceAndKeyword from "./HighlightSentenceAndKeyword";
-import "./NamerPage.less";
+import "../NamerPage.less";
 
 interface Poem {
   content: string;

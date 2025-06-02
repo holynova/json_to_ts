@@ -1,8 +1,8 @@
 import React from "react";
 import { Tabs } from "antd";
-import SearchTab from "./SearchTab";
-import RandomNameTab from "./RandomNameTab";
-import RankingTab from "./RankingTab";
+import SearchTab from "./components/SearchTab";
+import RandomNameTab from "./components/RandomNameTab";
+import RankingTab from "./components/RankingTab";
 import "./NamerPage.less";
 
 const NamerPage: React.FC = () => {

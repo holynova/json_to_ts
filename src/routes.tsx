@@ -20,7 +20,7 @@ import { SalaryPage } from "./pages/SalaryPage/SalaryPage";
 
 const routes = [
   {
-    name: "排列组合",
+    name: "🔄 排列组合",
     path: "/combination",
     element: <CombinationPage />,
   },
@@ -30,32 +30,32 @@ const routes = [
   //   element: <DemoPage />,
   // },
   {
-    name: "JavaScript转TypeScript",
+    name: "⚡ JavaScript转TypeScript",
     path: "/ts",
     element: <HomePage />,
   },
   {
-    name: "json格式化",
+    name: "📝 json格式化",
     path: "/json",
     element: <JsonFormatPage />,
   },
   {
-    name: "火锅定时器",
+    name: "⏰ 火锅定时器",
     path: "/timer",
     element: <TimerPage />,
   },
   {
-    name: "古诗词起名",
+    name: "📚 古诗词起名",
     path: "/namer",
     element: <NamerPage />,
   },
   {
-    name: "节假日可视化",
+    name: "📅 节假日可视化",
     path: "/holiday",
     element: <HolidayPage />,
   },
   {
-    name: "倒推工资",
+    name: "💰 倒推工资",
     path: "/salary",
     element: <SalaryPage />,
   },

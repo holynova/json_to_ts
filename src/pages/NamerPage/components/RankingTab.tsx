@@ -5,7 +5,7 @@ import {
   SmileOutlined,
   DislikeOutlined,
 } from "@ant-design/icons";
-import "./NamerPage.less";
+import "../NamerPage.less";
 
 interface FeedbackData {
   name: string;

@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Input } from "antd";
-import { poemDict } from "./poemDict";
+import { poemDict } from "../data/poemDict";
 import HighlightSentenceAndKeyword from "./HighlightSentenceAndKeyword";
-import "./NamerPage.less";
+import "../NamerPage.less";
 
 interface Poem {
   content: string;
