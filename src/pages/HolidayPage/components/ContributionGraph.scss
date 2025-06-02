@@ -110,6 +110,18 @@
     &--workday-weekend {
       background-color: #ffd666;
     }
+
+    &--today {
+      position: relative;
+      animation: pulse 2s infinite;
+      border: 2px solid #1890ff;
+      transform: scale(1.2);
+      z-index: 1;
+
+      &:hover {
+        transform: scale(1.4);
+      }
+    }
   }
 
   &__tooltip {
@@ -121,5 +133,17 @@
     font-size: 14px;
     white-space: pre-line;
     z-index: 1000;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
   }
 }

@@ -13,6 +13,7 @@ import {
   endOfWeek,
   addWeeks,
   isSameYear,
+  isToday,
 } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import {
@@ -143,12 +144,16 @@ const ContributionGraph: React.FC<ContributionGraphProps> = ({ year }) => {
       );
     }
 
+    const isCurrentDay = isToday(date);
+    const formattedDate = format(date, "yyyy-MM-dd");
+
     return (
       <div
         key={dayIndex}
+        title={formattedDate}
         className={`contribution-graph__cell contribution-graph__cell--${getCellType(
           date,
-        )}`}
+        )} ${isCurrentDay ? "contribution-graph__cell--today" : ""}`}
         onMouseEnter={(e) => handleMouseEnter(date, e)}
         onMouseLeave={handleMouseLeave}
       />
