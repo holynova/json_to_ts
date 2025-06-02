@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Button, Input } from "antd";
 import {
   LikeOutlined,
@@ -35,50 +35,6 @@ const RandomNameTab: React.FC = () => {
   const [clickedButtons, setClickedButtons] = useState<{
     [key: string]: string;
   }>({});
-
-  const handleFeedback = (
-    name: GeneratedName,
-    type: "like" | "happy" | "dislike",
-  ) => {
-    const storageKey = `nameFeedback_${type}`;
-    const existingData = JSON.parse(localStorage.getItem(storageKey) || "[]");
-
-    const feedbackData = {
-      name: name.name,
-      source: name.source,
-      poem: {
-        title: name.poem.title,
-        dynasty: name.poem.dynasty,
-        author: name.poem.author,
-      },
-      count: 1,
-    };
-
-    const existingIndex = existingData.findIndex(
-      (item: any) => item.name === name.name,
-    );
-    if (existingIndex >= 0) {
-      existingData[existingIndex].count += 1;
-    } else {
-      existingData.push(feedbackData);
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(existingData));
-    window.dispatchEvent(new Event("storage"));
-
-    // 添加动画效果
-    const buttonKey = `${name.name}_${type}`;
-    setClickedButtons((prev) => ({ ...prev, [buttonKey]: type }));
-
-    // 500ms 后移除动画类
-    setTimeout(() => {
-      setClickedButtons((prev) => {
-        const newState = { ...prev };
-        delete newState[buttonKey];
-        return newState;
-      });
-    }, 500);
-  };
 
   const generateRandomName = useCallback(() => {
     const names: GeneratedName[] = [];
@@ -130,18 +86,71 @@ const RandomNameTab: React.FC = () => {
     setGeneratedNames(names);
   }, [surname]);
 
+  // 组件加载时自动生成一次
+  useEffect(() => {
+    generateRandomName();
+  }, []);
+
+  const handleFeedback = (
+    name: GeneratedName,
+    type: "like" | "happy" | "dislike",
+  ) => {
+    const storageKey = `nameFeedback_${type}`;
+    const existingData = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    const feedbackData = {
+      name: name.name,
+      source: name.source,
+      poem: {
+        title: name.poem.title,
+        dynasty: name.poem.dynasty,
+        author: name.poem.author,
+      },
+      count: 1,
+    };
+
+    const existingIndex = existingData.findIndex(
+      (item: any) => item.name === name.name,
+    );
+    if (existingIndex >= 0) {
+      existingData[existingIndex].count += 1;
+    } else {
+      existingData.push(feedbackData);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(existingData));
+    window.dispatchEvent(new Event("storage"));
+
+    // 添加动画效果
+    const buttonKey = `${name.name}_${type}`;
+    setClickedButtons((prev) => ({ ...prev, [buttonKey]: type }));
+
+    // 500ms 后移除动画类
+    setTimeout(() => {
+      setClickedButtons((prev) => {
+        const newState = { ...prev };
+        delete newState[buttonKey];
+        return newState;
+      });
+    }, 500);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      generateRandomName();
+    }
+  };
+
   return (
     <div className="random-name-tab">
       <div className="input-group">
         <Input
           value={surname}
-          placeholder="请输入姓氏"
+          placeholder="请输入姓氏（按回车生成）"
           onChange={(e) => setSurname(e.target.value)}
-          // style={{ width: 200 }}
+          onKeyPress={handleKeyPress}
+          size="large"
         />
-        <Button type="default" onClick={generateRandomName} size="large">
-          生成
-        </Button>
       </div>
 
       <div className="generated-names">
@@ -149,8 +158,6 @@ const RandomNameTab: React.FC = () => {
           <div key={index} className="name-item">
             <div className="name">{item.name}</div>
             <div className="source">
-              {/* <div className="sentence">出自：{item.source}</div> */}
-
               <div className="full-poem">
                 <HighlightSentenceAndKeyword
                   text={item.poem.content}
@@ -160,9 +167,6 @@ const RandomNameTab: React.FC = () => {
                   }}
                   keywordStyle={{
                     fontWeight: "bold",
-                    // backgroundColor: "#fdd9a0",
-                    // padding: "2px 4px",
-                    // borderRadius: "4px",
                   }}
                 />
               </div>
