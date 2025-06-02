@@ -15,6 +15,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import JsonFormatPage from "./pages/JsonFormatPage/JsonFormatPage";
 import TimerPage from "./pages/TimerPage/TimerPage";
 import NamerPage from "./pages/NamerPage/NamerPage";
+import HolidayPage from "./pages/HolidayPage/HolidayPage";
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     name: "古诗词起名",
     path: "/namer",
     element: <NamerPage />,
+  },
+  {
+    name: "节假日日历",
+    path: "/holiday",
+    element: <HolidayPage />,
   },
   {
     path: "/",

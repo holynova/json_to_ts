@@ -1,0 +1,17 @@
+.holiday-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 24px;
+    color: #24292e;
+    margin-bottom: 24px;
+  }
+
+  &__content {
+    background: #f6f8fa;
+    border-radius: 12px;
+    padding: 24px;
+  }
+}

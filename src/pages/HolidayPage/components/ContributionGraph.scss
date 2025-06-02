@@ -1,0 +1,125 @@
+.contribution-graph {
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #333;
+    }
+  }
+
+  &__legend {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      border-radius: 2px;
+    }
+
+    &--workday::before {
+      background-color: #ebedf0;
+    }
+
+    &--weekend::before {
+      background-color: #9be9a8;
+    }
+
+    &--holiday::before {
+      background-color: #40c463;
+    }
+
+    &--workday-weekend::before {
+      background-color: #ffd666;
+    }
+  }
+
+  &__years {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__year {
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #333;
+    }
+  }
+
+  &__grid {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__week {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    &--empty {
+      background-color: transparent;
+    }
+
+    &--workday {
+      background-color: #ebedf0;
+    }
+
+    &--weekend {
+      background-color: #9be9a8;
+    }
+
+    &--holiday {
+      background-color: #40c463;
+    }
+
+    &--workday-weekend {
+      background-color: #ffd666;
+    }
+  }
+
+  &__tooltip {
+    position: fixed;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: pre-line;
+    z-index: 1000;
+  }
+}
