@@ -5,4 +5,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   base: "/json_to_ts/",
+  build: {
+    rollupOptions: {
+      external: [/node_modules/],
+    },
+  },
 });

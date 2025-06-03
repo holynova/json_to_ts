@@ -127,7 +127,7 @@ export class CombinationCreator {
         title: `factor${index}`,
         dataIndex: key,
         key: key,
-        sorter: (rowA, rowB) => {
+        sorter: (rowA: Record<string, any>, rowB: Record<string, any>) => {
           const a = rowA[key];
           const b = rowB[key];
 
