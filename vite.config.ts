@@ -5,4 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   base: "/json_to_ts/",
+  json: {
+    stringify: true,
+  },
 });
