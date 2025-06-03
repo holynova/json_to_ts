@@ -22,7 +22,9 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm install
+          npm install --package-lock-only
 
       - name: Build
         run: npm run build
