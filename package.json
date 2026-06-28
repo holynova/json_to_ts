@@ -13,6 +13,7 @@
     "@types/mockjs": "^1.0.6",
     "@types/react-split-pane": "^0.1.67",
     "add": "^2.0.6",
+    "@ant-design/icons": "^5.0.1",
     "antd": "^5.1.7",
     "date-fns": "^4.1.0",
     "downloadjs": "^1.4.7",
