@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode cloudflare",
+    "build:pages": "tsc && vite build --mode pages",
     "preview": "vite preview",
     "publish": "bash publish.bash"
   },

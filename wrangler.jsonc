@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "json-to-ts",
+  "compatibility_date": "2026-09-03",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    {
+      "pattern": "json-to-ts.xiaosang.cc",
+      "custom_domain": true
+    }
+  ]
+}
